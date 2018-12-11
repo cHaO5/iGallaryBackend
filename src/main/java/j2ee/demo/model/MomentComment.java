@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * MomentComment
+ * MomentCommentMapper
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
@@ -161,7 +161,7 @@ public class MomentComment   {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class MomentComment {\n");
+    sb.append("class MomentCommentMapper {\n");
     
     sb.append("    momentId: ").append(toIndentedString(momentId)).append("\n");
     sb.append("    senderId: ").append(toIndentedString(senderId)).append("\n");

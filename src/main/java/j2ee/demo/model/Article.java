@@ -34,8 +34,8 @@ public class Article   {
   @JsonProperty("ForwardNum")
   private Integer forwardNum = null;
 
-  @JsonProperty("FavoriteNum")
-  private Integer favoriteNum = null;
+  @JsonProperty("FavouriteNum")
+  private Integer favouriteNum = null;
 
   @JsonProperty("CommentNum")
   private Integer commentNum = null;
@@ -166,24 +166,24 @@ public class Article   {
     this.forwardNum = forwardNum;
   }
 
-  public Article favoriteNum(Integer favoriteNum) {
-    this.favoriteNum = favoriteNum;
+  public Article favouriteNum(Integer favouriteNum) {
+    this.favouriteNum = favouriteNum;
     return this;
   }
 
   /**
-   * Get favoriteNum
-   * @return favoriteNum
+   * Get favouriteNum
+   * @return favouriteNum
   **/
   @ApiModelProperty(example = "8", value = "")
 
 
-  public Integer getFavoriteNum() {
-    return favoriteNum;
+  public Integer getFavouriteNum() {
+    return favouriteNum;
   }
 
-  public void setFavoriteNum(Integer favoriteNum) {
-    this.favoriteNum = favoriteNum;
+  public void setFavouriteNum(Integer favouriteNum) {
+    this.favouriteNum = favouriteNum;
   }
 
   public Article commentNum(Integer commentNum) {
@@ -242,14 +242,14 @@ public class Article   {
         Objects.equals(this.creator, article.creator) &&
         Objects.equals(this.likeNum, article.likeNum) &&
         Objects.equals(this.forwardNum, article.forwardNum) &&
-        Objects.equals(this.favoriteNum, article.favoriteNum) &&
+        Objects.equals(this.favouriteNum, article.favouriteNum) &&
         Objects.equals(this.commentNum, article.commentNum) &&
         Objects.equals(this.time, article.time);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title, content, creator, likeNum, forwardNum, favoriteNum, commentNum, time);
+    return Objects.hash(id, title, content, creator, likeNum, forwardNum, favouriteNum, commentNum, time);
   }
 
   @Override
@@ -263,7 +263,7 @@ public class Article   {
     sb.append("    creator: ").append(toIndentedString(creator)).append("\n");
     sb.append("    likeNum: ").append(toIndentedString(likeNum)).append("\n");
     sb.append("    forwardNum: ").append(toIndentedString(forwardNum)).append("\n");
-    sb.append("    favoriteNum: ").append(toIndentedString(favoriteNum)).append("\n");
+    sb.append("    favouriteNum: ").append(toIndentedString(favouriteNum)).append("\n");
     sb.append("    commentNum: ").append(toIndentedString(commentNum)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
     sb.append("}");
