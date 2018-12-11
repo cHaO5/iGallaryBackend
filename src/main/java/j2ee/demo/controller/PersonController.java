@@ -1,7 +1,7 @@
 package j2ee.demo.controller;
 
 import j2ee.demo.model.Person;
-import j2ee.demo.dao.PersonRepository;
+import j2ee.demo.model.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

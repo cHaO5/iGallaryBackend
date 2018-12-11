@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import j2ee.demo.model.Picture;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -16,7 +20,11 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
+@Entity
+@Table(name = "users")
 public class User   {
+  @Id
+  @GeneratedValue
   @JsonProperty("Id")
   private Integer id = null;
 
@@ -27,7 +35,7 @@ public class User   {
   private String description = null;
 
   @JsonProperty("Avatar")
-  private Picture avatar = null;
+  private String avatar = null;
 
   @JsonProperty("Email")
   private String email = null;
@@ -96,7 +104,7 @@ public class User   {
     this.description = description;
   }
 
-  public User avatar(Picture avatar) {
+  public User avatar(String avatar) {
     this.avatar = avatar;
     return this;
   }
@@ -109,11 +117,11 @@ public class User   {
 
   @Valid
 
-  public Picture getAvatar() {
+  public String getAvatar() {
     return avatar;
   }
 
-  public void setAvatar(Picture avatar) {
+  public void setAvatar(String avatar) {
     this.avatar = avatar;
   }
 
