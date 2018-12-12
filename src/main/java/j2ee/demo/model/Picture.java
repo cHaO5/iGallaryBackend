@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -21,12 +22,24 @@ import javax.validation.constraints.*;
 @Entity
 public class Picture   {
   @Id
+  @GeneratedValue
+  @JsonProperty("Id")
+  private Integer id = null;
+
   @JsonProperty("Url")
   private String url = null;
 
   public Picture url(String url) {
     this.url = url;
     return this;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   /**

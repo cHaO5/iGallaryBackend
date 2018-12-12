@@ -7,15 +7,15 @@ import java.util.List;
 
 @Mapper
 public interface PictureMapper {
-    @Select("SELECT * FROM pictures")
+    @Select("SELECT * FROM picture")
     List<Picture> getALL();
 
-    @Select("SELECT * FROM pictures WHERE url = #{url}")
-    Picture getOne(String url);
+    @Select("SELECT * FROM picture WHERE id = #{id}")
+    Picture getOne(int id);
 
-    @Insert("INSERT INTO pictures(url), VALUES(#{url})")
+    @Insert("INSERT INTO picture(url), VALUES(#{url})")
     void insert(Picture picture);
 
-    @Delete("DELETE FROM pictures WHERE url =#{url}")
+    @Delete("DELETE FROM picture WHERE id =#{id}")
     void delete(String url);
 }

@@ -8,15 +8,15 @@ import java.util.List;
 
 @Mapper
 public interface TagMapper {
-    @Select("SELECT * FROM pictures")
+    @Select("SELECT * FROM tag")
     List<Tag> getALL();
 
-    @Select("SELECT * FROM pictures WHERE url = #{url}")
+    @Select("SELECT * FROM tag WHERE id = #{id}")
     Tag getOne(String url);
 
-    @Insert("INSERT INTO pictures(url), VALUES(#{url})")
-    void insert(Tag tag);
+    @Insert("INSERT INTO tag(tagname), VALUES(#{tagname})")
+    void insert(String tagname);
 
-    @Delete("DELETE FROM pictures WHERE url =#{url}")
-    void delete(String url);
+    @Delete("DELETE FROM pictures WHERE id =#{id}")
+    void delete(int id);
 }

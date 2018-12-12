@@ -10,12 +10,12 @@ public interface ForwardMapper {
     @Select("SELECT * FROM forward")
     List<Forward> getALL();
 
-    @Select("SELECT * FROM forward WHERE creator = #{creator} and momentId = #{momentId}")
-    Forward getOne(int creator, int momentId);
+    @Select("SELECT * FROM forward WHERE id = #{id}")
+    Forward getOne(int id);
 
     @Insert("INSERT INTO forward(creator, momentId), VALUES(#{creator}, #{momentId})")
     void insert(Forward forward);
 
-    @Delete("DELETE FROM forward WHERE creator = #{creator} and momentId = #{momentId}")
+    @Delete("DELETE FROM forward WHERE id = #{id}")
     void delete(int id);
 }

@@ -9,6 +9,7 @@ import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -22,6 +23,10 @@ import javax.validation.constraints.*;
 @Entity
 public class Message   {
   @Id
+  @GeneratedValue
+  @JsonProperty
+  private Integer id = null;
+
   @JsonProperty("SenderId")
   private Integer senderId = null;
 
@@ -37,6 +42,14 @@ public class Message   {
   public Message senderId(Integer senderId) {
     this.senderId = senderId;
     return this;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   /**
