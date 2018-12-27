@@ -14,11 +14,11 @@ public interface FavouriteMapper {
     Favourites getOne(int id);
 
     @Insert("INSERT INTO favourites(creator, name), VALUES(#{creator}, #{name})")
-    void insert(Favourites favourites);
+    int insert(Favourites favourites);
 
     @Update("UPDATE users SET creator=#{creator}, name=#{name} WHERE id =#{id}")
     void update(Favourites favourites);
 
     @Delete("DELETE FROM favourites WHERE id =#{id}")
-    void delete(int id);
+    int delete(int id);
 }
