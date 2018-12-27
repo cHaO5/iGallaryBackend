@@ -22,6 +22,9 @@ import javax.validation.constraints.*;
 @Entity
 public class MomentComment   {
   @Id
+  @JsonProperty("Id")
+  private Integer id = null;
+
   @JsonProperty("MomentId")
   private Integer momentId = null;
 
@@ -36,6 +39,14 @@ public class MomentComment   {
 
   @JsonProperty("CreateTime")
   private OffsetDateTime createTime = null;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
   public MomentComment momentId(Integer momentId) {
     this.momentId = momentId;

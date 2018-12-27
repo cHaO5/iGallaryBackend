@@ -5,9 +5,12 @@
  */
 package j2ee.demo.controller;
 
+import j2ee.demo.model.Moment;
 import j2ee.demo.model.MomentComment;
 import io.swagger.annotations.*;
+import j2ee.demo.service.CommentsService;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,8 @@ import java.util.Map;
 @Api(value = "comments", description = "the comments API")
 @RestController
 public class CommentsController {
+    @Autowired
+    private CommentsService commentService;
 
     @ApiOperation(value = "", nickname = "commentsCommentIdDelete", notes = "删除一个收藏夹", tags = {"comment",})
     @ApiResponses(value = {
@@ -29,7 +34,8 @@ public class CommentsController {
     @RequestMapping(value = "/comments/{CommentId}",
             method = RequestMethod.DELETE)
     Response commentsCommentIdDelete(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
-        return null;
+        commentService.deleteComment(commentId);
+        return new Response(200, "Success");
     }
 
 
@@ -40,7 +46,8 @@ public class CommentsController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response commentsCommentIdGet(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
-        return null;
+        MomentComment momentComment = commentService.getComment(commentId);
+        return new Response(200, "Success", momentComment);
     }
 
 
@@ -53,7 +60,8 @@ public class CommentsController {
             consumes = {"application/json"},
             method = RequestMethod.PUT)
     Response commentsCommentIdPut(@ApiParam(value = "", required = true) @Valid @RequestBody MomentComment body, @ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
-        return null;
+        commentService.modifyComment(commentId, body);
+        return new Response(200, "Success");
     }
 
 
@@ -65,7 +73,8 @@ public class CommentsController {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     Response commentsPost(@ApiParam(value = "", required = true) @Valid @RequestBody MomentComment body) {
-        return null;
+        commentService.addComment(body);
+        return new Response(200, "Success");
     }
 
 }

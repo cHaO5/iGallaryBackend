@@ -8,7 +8,9 @@ package j2ee.demo.controller;
 import j2ee.demo.model.Favourites;
 import j2ee.demo.model.User;
 import io.swagger.annotations.*;
+import j2ee.demo.service.UsersService;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ import java.util.Map;
 @RestController
 public class UsersController {
 
+    @Autowired
+    private UsersService usersService;
+
     @ApiOperation(value = "注册用户", nickname = "usersPost", notes = "", response = User.class, tags = {"user",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Already created the user.", response = User.class),
@@ -33,7 +38,8 @@ public class UsersController {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     Response usersPost(@ApiParam(value = "", required = true) @Valid @RequestBody User body) {
-        return null;
+        usersService.addUser(body);
+        return new Response(200, "Success");
     }
 
 
@@ -46,7 +52,8 @@ public class UsersController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response usersUserIdFavouritesFavIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @ApiParam(value = "", required = true) @PathVariable("FavId") Integer favId) {
-        return null;
+        Favourites favourites = usersService.getFavourite(userId, favId);
+        return new Response(200, "Success", favourites);
     }
 
 
@@ -57,7 +64,8 @@ public class UsersController {
     @RequestMapping(value = "/users/{UserId}/follows/{FollowedUserId}",
             method = RequestMethod.DELETE)
     Response usersUserIdFollowsFollowedUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @ApiParam(value = "", required = true) @PathVariable("FollowedUserId") Integer followedUserId) {
-        return null;
+        usersService.unfollow(userId, followedUserId);
+        return new Response(200, "Success");
     }
 
 
@@ -69,7 +77,8 @@ public class UsersController {
     @RequestMapping(value = "/users/{UserId}/follows/{FollowedUserId}",
             method = RequestMethod.POST)
     Response usersUserIdFollowsFollowedUserIdPost(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @ApiParam(value = "", required = true) @PathVariable("FollowedUserId") Integer followedUserId) {
-        return null;
+        usersService.follow(userId, followedUserId);
+        return new Response(200, "Success");
     }
 
 
@@ -81,7 +90,8 @@ public class UsersController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response usersUserIdFollowsGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        List<Integer> users = usersService.getFollow(userId);
+        return new Response(200, "Success", users);
     }
 
 
@@ -92,7 +102,8 @@ public class UsersController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response usersUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        User user = usersService.getUser(userId);
+        return new Response(200, "Success", user);
     }
 
 
@@ -104,7 +115,8 @@ public class UsersController {
             consumes = {"application/json"},
             method = RequestMethod.PUT)
     Response usersUserIdPut(@ApiParam(value = "", required = true) @Valid @RequestBody User body, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        usersService.modifyUser(userId, body);
+        return new Response(200, "Success", user);
     }
 
 }

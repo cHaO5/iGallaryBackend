@@ -7,11 +7,14 @@ package j2ee.demo.controller;
 
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
+import j2ee.demo.service.MomentsService;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -22,6 +25,8 @@ import java.util.Map;
 @Api(value = "moments", description = "the moments API")
 @RestController
 public class MomentsController {
+    @Autowired
+    private MomentsService momentsService;
 
     @ApiOperation(value = "删除动态", nickname = "momentsMomentIdDelete", notes = "", tags = {"moment",})
     @ApiResponses(value = {
@@ -30,7 +35,8 @@ public class MomentsController {
     @RequestMapping(value = "/moments/{MomentId}",
             method = RequestMethod.DELETE)
     Response momentsMomentIdDelete(@ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId) {
-        return null;
+        momentsService.deleteMomentById(momentId);
+        return new Response(200, "Success");
     }
 
 
@@ -41,7 +47,8 @@ public class MomentsController {
     @RequestMapping(value = "/moments/{MomentId}/forward/{UserId}",
             method = RequestMethod.POST)
     Response momentsMomentIdForwardUserIdPost(@ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        momentsService.forward(momentId, userId);
+        return new Response(201, "Success");
     }
 
 
@@ -52,7 +59,8 @@ public class MomentsController {
     @RequestMapping(value = "/moments/{MomentId}/likes/{UserId}",
             method = RequestMethod.DELETE)
     Response momentsMomentIdLikesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        momentsService.deleteMomentLikes(momentId, userId);
+        return new Response(200, "Success");
     }
 
 
@@ -64,7 +72,8 @@ public class MomentsController {
     @RequestMapping(value = "/moments/{MomentId}/likes/{UserId}",
             method = RequestMethod.POST)
     Response momentsMomentIdLikesUserIdPost(@ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        momentsService.addMomentLikes(momentId, userId);
+        return new Response(201, "Success");
     }
 
 
@@ -76,7 +85,8 @@ public class MomentsController {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     Response momentsPost(@ApiParam(value = "", required = true) @Valid @RequestBody Moment body) {
-        return null;
+        momentsService.addMoment(body);
+        return new Response(201, "Success");
     }
 
 
@@ -88,7 +98,8 @@ public class MomentsController {
             consumes = {"application/json"},
             method = RequestMethod.PUT)
     Response momentsPut(@ApiParam(value = "", required = true) @Valid @RequestBody Moment body) {
-        return null;
+        momentsService.modifyMoment(body);
+        return new Response(201, "Success");
     }
 
 
@@ -100,7 +111,8 @@ public class MomentsController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response momentsUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        List<Moment> data = momentsService.getMoment(userId);
+        return new Response(200, "Success", data);
     }
 
 }
