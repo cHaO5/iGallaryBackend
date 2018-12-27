@@ -116,7 +116,7 @@ public class UsersController {
             method = RequestMethod.PUT)
     Response usersUserIdPut(@ApiParam(value = "", required = true) @Valid @RequestBody User body, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
         usersService.modifyUser(userId, body);
-        return new Response(200, "Success", user);
+        return new Response(200, "Success");
     }
 
 }

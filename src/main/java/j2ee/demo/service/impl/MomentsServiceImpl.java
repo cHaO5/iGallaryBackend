@@ -31,7 +31,7 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Override
     public int deleteMomentLikes(Integer momentId, Integer userId) {
-
+// TODO Add likes function
     }
 
     @Override
@@ -41,16 +41,16 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Override
     public int addMoment(Moment moment) {
-        momentMapper.insert(moment);
+        return momentMapper.insert(moment);
     }
 
     @Override
     public int modifyMoment(Moment moment) {
-        momentMapper.update(moment);
+        return momentMapper.update(moment);
     }
 
     @Override
     public List<Moment> getMoment(Integer userId) {
-        momentMapper.getALL();
+        return momentMapper.getALL();
     }
 }

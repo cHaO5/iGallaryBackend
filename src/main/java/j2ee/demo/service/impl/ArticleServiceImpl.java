@@ -18,7 +18,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public int deleteArticleLikes(Integer articleId, Integer userId) {
-
+        // TODO Add likes function
     }
 
     @Override
