@@ -52,8 +52,8 @@ public class UsersController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response usersUserIdFavouritesFavIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @ApiParam(value = "", required = true) @PathVariable("FavId") Integer favId) {
-        Favourites favourites = usersService.getFavourite(userId, favId);
-        return new Response(200, "Success", favourites);
+        List<Integer> moments = usersService.getFavourite(userId, favId);
+        return new Response(200, "Success", moments);
     }
 
 

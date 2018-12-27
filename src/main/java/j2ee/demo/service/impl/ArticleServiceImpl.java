@@ -18,12 +18,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public int deleteArticleLikes(Integer articleId, Integer userId) {
-        // TODO Add likes function
+        Article article = articleMapper.getOne(articleId);
+        article.setLikeNum(article.getLikeNum() - 1);
+        return articleMapper.update(article);
     }
 
     @Override
     public int addArticleLikes(Integer articleId, Integer userId) {
-
+        Article article = articleMapper.getOne(articleId);
+        article.setLikeNum(article.getLikeNum() + 1);
+        return articleMapper.update(article);
     }
 
     @Override

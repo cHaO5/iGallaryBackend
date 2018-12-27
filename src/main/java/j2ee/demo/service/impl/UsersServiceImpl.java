@@ -1,6 +1,7 @@
 package j2ee.demo.service.impl;
 
 import j2ee.demo.mapper.FavouriteMapper;
+import j2ee.demo.mapper.FavouritesMomentMapper;
 import j2ee.demo.mapper.UserFollowMapper;
 import j2ee.demo.mapper.UserMapper;
 import j2ee.demo.model.Favourites;
@@ -21,14 +22,18 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private UserFollowMapper userFollowMapper;
 
+    @Autowired
+    private FavouritesMomentMapper favouritesMomentMapper;
+
     @Override
     public int addUser(User user) {
         return userMapper.insert(user);
     }
 
     @Override
-    public Favourites getFavourite(Integer userId, Integer favId) {
+    public List<Integer> getFavourite(Integer userId, Integer favId) {
         // TODO Add favourite function
+        return favouritesMomentMapper.getMomentsInFavourites(favId);
     }
 
     @Override

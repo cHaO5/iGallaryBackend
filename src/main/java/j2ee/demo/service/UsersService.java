@@ -8,7 +8,7 @@ import java.util.List;
 public interface UsersService {
     int addUser(User user);
 
-    Favourites getFavourite(Integer userId, Integer favId);
+    List<Integer> getFavourite(Integer userId, Integer favId);
 
     int unfollow(Integer userId, Integer followedUserId);
 

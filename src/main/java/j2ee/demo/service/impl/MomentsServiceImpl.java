@@ -31,12 +31,16 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Override
     public int deleteMomentLikes(Integer momentId, Integer userId) {
-// TODO Add likes function
+        Moment moment = momentMapper.getOne(momentId);
+        moment.setLikeNum(moment.getLikeNum() - 1);
+        return momentMapper.update(moment);
     }
 
     @Override
     public int addMomentLikes(Integer momentId, Integer userId) {
-
+        Moment moment = momentMapper.getOne(momentId);
+        moment.setLikeNum(moment.getLikeNum() + 1);
+        return momentMapper.update(moment);
     }
 
     @Override
