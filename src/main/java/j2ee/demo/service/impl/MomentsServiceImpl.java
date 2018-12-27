@@ -2,6 +2,7 @@ package j2ee.demo.service.impl;
 
 import j2ee.demo.mapper.ForwardMapper;
 import j2ee.demo.mapper.MomentMapper;
+import j2ee.demo.mapper.UserLikesMapper;
 import j2ee.demo.model.Forward;
 import j2ee.demo.model.Moment;
 import j2ee.demo.service.MomentsService;
@@ -15,6 +16,9 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Autowired
     private ForwardMapper forwardMapper;
+
+    @Autowired
+    private UserLikesMapper userLikesMapper;
 
     @Override
     public int deleteMomentById(Integer momentId) {
@@ -31,6 +35,7 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Override
     public int deleteMomentLikes(Integer momentId, Integer userId) {
+        userLikesMapper.delete(userId, momentId, "moment");
         Moment moment = momentMapper.getOne(momentId);
         moment.setLikeNum(moment.getLikeNum() - 1);
         return momentMapper.update(moment);
@@ -38,6 +43,7 @@ public class MomentsServiceImpl implements MomentsService {
 
     @Override
     public int addMomentLikes(Integer momentId, Integer userId) {
+        userLikesMapper.insert(userId, momentId, "moment");
         Moment moment = momentMapper.getOne(momentId);
         moment.setLikeNum(moment.getLikeNum() + 1);
         return momentMapper.update(moment);
