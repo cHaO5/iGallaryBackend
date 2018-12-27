@@ -16,6 +16,7 @@ public class FavouritesServiceImpl implements FavouritesService {
         return favouriteMapper.insert(favourites);
     }
 
+    @Override
     public int deleteFavourite(Integer userId, Integer favouriteId) {
         return favouriteMapper.delete(favouriteId);
     }

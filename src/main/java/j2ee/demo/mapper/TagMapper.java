@@ -14,7 +14,7 @@ public interface TagMapper {
     @Select("SELECT * FROM tag WHERE id = #{id}")
     Tag getOne(String url);
 
-    @Insert("INSERT INTO tag(tagname), VALUES(#{tagname})")
+    @Insert("INSERT INTO tag(tagname) VALUES(#{tagname})")
     void insert(String tagname);
 
     @Delete("DELETE FROM pictures WHERE id =#{id}")

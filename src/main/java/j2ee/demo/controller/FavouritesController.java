@@ -7,7 +7,9 @@ package j2ee.demo.controller;
 
 import j2ee.demo.model.Favourites;
 import io.swagger.annotations.*;
+import j2ee.demo.service.FavouritesService;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ import java.util.Map;
 @Api(value = "favourites", description = "the favourites API")
 @RestController
 public class FavouritesController {
+    @Autowired
+    private FavouritesService favouritesService;
 
     @ApiOperation(value = "", nickname = "favouritesUserIdDelete", notes = "删除一个收藏夹", response = Favourites.class, tags = {"favourite",})
     @ApiResponses(value = {
@@ -31,7 +35,8 @@ public class FavouritesController {
             produces = {"application/json"},
             method = RequestMethod.DELETE)
     Response favouritesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @PathVariable("FavouritesId") Integer favouritesId) {
-        return null;
+        favouritesService.deleteFavourite(userId, favouritesId);
+        return new Response(200, "Success");
     }
 
 
@@ -44,7 +49,8 @@ public class FavouritesController {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     Response favouritesUserIdPost(@ApiParam(value = "", required = true) @Valid @RequestBody Favourites body, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        favouritesService.addFavourite(userId, body);
+        return new Response(201, "Success");
     }
 
 }

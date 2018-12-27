@@ -13,14 +13,14 @@ public interface MomentMapper {
     @Select("SELECT * FROM moment WHERE id = #{id}")
     Moment getOne(int id);
 
-    @Insert("INSERT INTO moment(creator, content, likeNum, forwardNum, favouriteNum, commentNum)," +
+    @Insert("INSERT INTO moment(creator, content, likeNum, forwardNum, favouriteNum, commentNum)" +
             " VALUES(#{creator}, #{content}, #{likeNum}, #{forwardNum}, #{favouriteNum}, #{commentNum})")
-    void insert(Moment moment);
+    int insert(Moment moment);
 
     @Update("UPDATE moment SET creator=#{creator}, content=#{content}, likeNum=#{likeNum}, " +
             "forwardNum=#{forwardNum}, favouriteNum=#{favouriteNum}, commentNum=#{commentNum} WHERE id =#{id}")
-    void update(Moment moment);
+    int update(Moment moment);
 
     @Delete("DELETE FROM moment WHERE id =#{id}")
-    void delete(int id);
+    int delete(int id);
 }

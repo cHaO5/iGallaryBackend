@@ -17,13 +17,13 @@ public interface ArticleMapper {
     @Insert("INSERT INTO article(title, content, likeNum, forwardNum, favouriteNum, commentNum) " +
             "VALUES(#{title}, #{content}, #{creator}, #{likeNum}, #{forwardNum}, #{favouriteNum}, " +
             "#{commentNum})")
-    void insert(Article article);
+    int insert(Article article);
 
     @Update("UPDATE users SET title = #{title}, content = #{content}, creator = #{creator}, likeNum = #{likeNum}, " +
             "forwardNum = #{forwardNum}, favouriteNum = #{favouriteNum}, commentNum = #{commentNum} WHERE id = #{id}")
-    void update(Article article);
+    int update(Article article);
 
     @Delete("DELETE FROM users WHERE id =#{id}")
-    void delete(Long id);
+    int delete(Integer id);
 
 }

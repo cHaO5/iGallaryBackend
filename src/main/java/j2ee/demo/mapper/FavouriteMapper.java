@@ -13,7 +13,8 @@ public interface FavouriteMapper {
     @Select("SELECT * FROM favourites WHERE id = #{id}")
     Favourites getOne(int id);
 
-    @Insert("INSERT INTO favourites(creator, name), VALUES(#{creator}, #{name})")
+    @Insert("INSERT INTO favourites(creator, name) VALUES(#{creator}, #{name})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
     int insert(Favourites favourites);
 
     @Update("UPDATE users SET creator=#{creator}, name=#{name} WHERE id =#{id}")

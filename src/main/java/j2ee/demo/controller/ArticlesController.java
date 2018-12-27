@@ -7,7 +7,9 @@ package j2ee.demo.controller;
 
 import j2ee.demo.model.Article;
 import io.swagger.annotations.*;
+import j2ee.demo.service.ArticleService;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ import java.util.Map;
 @Api(value = "articles", description = "the articles API")
 @RestController
 public class ArticlesController {
+    @Autowired
+    private ArticleService articleService;
 
     @ApiOperation(value = "删除分享", nickname = "articlesArticleIdDelete", notes = "", tags = {"article",})
     @ApiResponses(value = {
@@ -30,7 +34,8 @@ public class ArticlesController {
     @RequestMapping(value = "/articles/{ArticleId}",
             method = RequestMethod.DELETE)
     Response articlesArticleIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId) {
-        return null;
+        articleService.deleteArticleById(articleId);
+        return new Response(200, "Success");
     }
 
 
@@ -41,7 +46,8 @@ public class ArticlesController {
     @RequestMapping(value = "/articles/{ArticleId}/likes/{UserId}",
             method = RequestMethod.DELETE)
     Response articlesArticleIdLikesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        articleService.addArticleLikes(articleId, userId);
+        return new Response(201, "Success");
     }
 
 
@@ -53,7 +59,8 @@ public class ArticlesController {
     @RequestMapping(value = "/articles/{ArticleId}/likes/{UserId}",
             method = RequestMethod.POST)
     Response articlesArticleIdLikesUserIdPost(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        articleService.deleteArticleLikes(articleId, userId);
+        return new Response(201, "Success");
     }
 
 
@@ -65,7 +72,8 @@ public class ArticlesController {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     Response articlesPost(@ApiParam(value = "", required = true) @Valid @RequestBody Article body) {
-        return null;
+        articleService.addArticle(body);
+        return new Response(201, "Post article successfully.");
     }
 
 
@@ -77,7 +85,8 @@ public class ArticlesController {
             consumes = {"application/json"},
             method = RequestMethod.PUT)
     Response articlesPut(@ApiParam(value = "", required = true) @Valid @RequestBody Article body) {
-        return null;
+        articleService.modifyArticle(body);
+        return new Response(200, "Post article successfully.");
     }
 
 
@@ -89,7 +98,8 @@ public class ArticlesController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     Response articlesUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        return null;
+        articleService.getArticles(userId);
+        return new Response(200, "Post article successfully.");
     }
 
 }

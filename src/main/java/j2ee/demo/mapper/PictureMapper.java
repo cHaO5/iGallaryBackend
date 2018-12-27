@@ -13,7 +13,7 @@ public interface PictureMapper {
     @Select("SELECT * FROM picture WHERE id = #{id}")
     Picture getOne(int id);
 
-    @Insert("INSERT INTO picture(url), VALUES(#{url})")
+    @Insert("INSERT INTO picture(url) VALUES(#{url})")
     void insert(Picture picture);
 
     @Delete("DELETE FROM picture WHERE id =#{id}")
