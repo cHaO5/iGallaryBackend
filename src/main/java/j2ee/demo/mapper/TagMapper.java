@@ -3,10 +3,12 @@ package j2ee.demo.mapper;
 import j2ee.demo.model.Tag;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
+@Repository
 public interface TagMapper {
     @Select("SELECT * FROM tag")
     List<Tag> getALL();

@@ -19,4 +19,8 @@ public interface UsersService {
     User getUser(Integer userId);
 
     int modifyUser(Integer userId, User user);
+
+    List<User> findByEmail(String email);
+
+    List<User> findByUsername(String username);
 }

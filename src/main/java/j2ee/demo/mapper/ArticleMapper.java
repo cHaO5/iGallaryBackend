@@ -2,10 +2,12 @@ package j2ee.demo.mapper;
 
 import j2ee.demo.model.Article;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
+@Repository
 public interface ArticleMapper {
 
     @Select("SELECT * FROM article")

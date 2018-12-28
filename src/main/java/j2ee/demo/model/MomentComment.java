@@ -1,5 +1,6 @@
 package j2ee.demo.model;
 
+import java.sql.Date;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -38,7 +39,7 @@ public class MomentComment   {
   private Integer quoteId = null;
 
   @JsonProperty("CreateTime")
-  private OffsetDateTime createTime = null;
+  private Date createTime = null;
 
   public Integer getId() {
     return id;
@@ -131,7 +132,7 @@ public class MomentComment   {
     this.quoteId = quoteId;
   }
 
-  public MomentComment createTime(OffsetDateTime createTime) {
+  public MomentComment createTime(Date createTime) {
     this.createTime = createTime;
     return this;
   }
@@ -144,11 +145,11 @@ public class MomentComment   {
 
   @Valid
 
-  public OffsetDateTime getCreateTime() {
+  public Date getCreateTime() {
     return createTime;
   }
 
-  public void setCreateTime(OffsetDateTime createTime) {
+  public void setCreateTime(Date createTime) {
     this.createTime = createTime;
   }
 

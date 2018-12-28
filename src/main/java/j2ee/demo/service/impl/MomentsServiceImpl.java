@@ -7,9 +7,11 @@ import j2ee.demo.model.Forward;
 import j2ee.demo.model.Moment;
 import j2ee.demo.service.MomentsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service(value = "momentsService")
 public class MomentsServiceImpl implements MomentsService {
     @Autowired
     private MomentMapper momentMapper;

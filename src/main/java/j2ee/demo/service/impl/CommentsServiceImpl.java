@@ -4,7 +4,9 @@ import j2ee.demo.mapper.MomentCommentMapper;
 import j2ee.demo.model.MomentComment;
 import j2ee.demo.service.CommentsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service(value = "commentsService")
 public class CommentsServiceImpl implements CommentsService {
     @Autowired
     MomentCommentMapper momentCommentMapper;

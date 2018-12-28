@@ -5,9 +5,11 @@ import j2ee.demo.mapper.UserLikesMapper;
 import j2ee.demo.model.Article;
 import j2ee.demo.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service(value = "articleService")
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
     ArticleMapper articleMapper;

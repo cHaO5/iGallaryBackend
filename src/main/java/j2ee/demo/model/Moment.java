@@ -47,6 +47,9 @@ public class Moment   {
   @JsonProperty("Time")
   private String time = null;
 
+  @JsonProperty("Tag")
+  private String tags = null;
+
   public Moment id(Integer id) {
     this.id = id;
     return this;
@@ -209,6 +212,13 @@ public class Moment   {
     this.time = time;
   }
 
+  public String getTags() {
+    return tags;
+  }
+
+  public void setTags(String tags) {
+    this.tags = tags;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {

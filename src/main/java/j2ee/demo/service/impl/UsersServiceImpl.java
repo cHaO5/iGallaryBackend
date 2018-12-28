@@ -9,9 +9,11 @@ import j2ee.demo.model.User;
 import j2ee.demo.model.UserFollow;
 import j2ee.demo.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service(value = "usersService")
 public class UsersServiceImpl implements UsersService {
     @Autowired
     private UserMapper userMapper;
@@ -62,5 +64,15 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public int modifyUser(Integer userId, User user) {
         return userMapper.update(user);
+    }
+
+    @Override
+    public List<User> findByEmail(String email) {
+        return userMapper.findByEmail(email);
+    }
+
+    @Override
+    public List<User> findByUsername(String username) {
+        return userMapper.findByUsername(username);
     }
 }

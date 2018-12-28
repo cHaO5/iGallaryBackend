@@ -6,10 +6,12 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
+@Repository
 public interface FavouritesMomentMapper {
     @Select("SELECT * FROM favourites_moment")
     List<FavouritesMoment> getALL();

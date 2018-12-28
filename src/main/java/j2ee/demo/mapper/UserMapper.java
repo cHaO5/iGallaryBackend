@@ -2,10 +2,12 @@ package j2ee.demo.mapper;
 
 import j2ee.demo.model.User;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Mapper
+//@Mapper
+@Repository
 public interface UserMapper {
     @Select("SELECT * FROM users")
     List<User> getALL();
@@ -23,4 +25,10 @@ public interface UserMapper {
 
     @Delete("DELETE FROM users WHERE id =#{id}")
     int delete(int id);
+
+    @Select("SELECT * FROM users WHERE username = #{username}")
+    List<User> findByUsername(String username);
+
+    @Select("SELECT * FROM users WHERE email = #{email}")
+    List<User> findByEmail(String email);
 }

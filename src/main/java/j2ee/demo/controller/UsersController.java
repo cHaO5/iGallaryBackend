@@ -38,6 +38,14 @@ public class UsersController {
             consumes = {"application/json"},
             method = RequestMethod.POST)
     Response usersPost(@ApiParam(value = "", required = true) @Valid @RequestBody User body) {
+        List<User> usersEmail = usersService.findByEmail(body.getEmail());
+        List<User> usersName = usersService.findByUsername(body.getUsername());
+        if (usersEmail.size() != 0) {
+            return new Response(409, "Error", "Email has been registered.");
+        }
+        if (usersName.size() != 0) {
+            return new Response(409, "Error", "Username has been used.");
+        }
         usersService.addUser(body);
         return new Response(200, "Success");
     }
