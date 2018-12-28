@@ -1,6 +1,7 @@
 package j2ee.demo.service;
 
 import j2ee.demo.model.Article;
+import j2ee.demo.model.UserLikes;
 
 import java.util.List;
 
@@ -17,4 +18,8 @@ public interface ArticleService {
     int modifyArticle(Article article);
 
     List<Article> getArticles(Integer userId);
+
+    Article findByArticleId(Integer articleId);
+
+    UserLikes findLikesByArticleIdAndUserId(Integer articleId, Integer userId);
 }

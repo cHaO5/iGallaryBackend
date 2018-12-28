@@ -67,12 +67,12 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public List<User> findByEmail(String email) {
+    public User findByEmail(String email) {
         return userMapper.findByEmail(email);
     }
 
     @Override
-    public List<User> findByUsername(String username) {
+    public User findByUsername(String username) {
         return userMapper.findByUsername(username);
     }
 }

@@ -3,6 +3,7 @@ package j2ee.demo.service.impl;
 import j2ee.demo.mapper.ArticleMapper;
 import j2ee.demo.mapper.UserLikesMapper;
 import j2ee.demo.model.Article;
+import j2ee.demo.model.UserLikes;
 import j2ee.demo.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getArticles(Integer userId) {
-        return articleMapper.getALL();
+        return articleMapper.getAll();
+    }
+
+    @Override
+    public Article findByArticleId(Integer articleId) { return articleMapper.getOne(articleId); }
+
+    @Override
+    public UserLikes findLikesByArticleIdAndUserId(Integer articleId, Integer userId) {
+        return userLikesMapper.findByArticleIdAndUserId(articleId, userId);
     }
 }

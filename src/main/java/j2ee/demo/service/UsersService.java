@@ -20,7 +20,7 @@ public interface UsersService {
 
     int modifyUser(Integer userId, User user);
 
-    List<User> findByEmail(String email);
+    User findByEmail(String email);
 
-    List<User> findByUsername(String username);
+    User findByUsername(String username);
 }

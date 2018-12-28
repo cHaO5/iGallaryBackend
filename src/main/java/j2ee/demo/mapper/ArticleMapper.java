@@ -9,23 +9,31 @@ import java.util.List;
 //@Mapper
 @Repository
 public interface ArticleMapper {
+    String SELECT_FIELDS = " id, title, content, creator, like_num, forward_num, favourite_num, comment_num, time ";
 
-    @Select("SELECT * FROM article")
-    List<Article> getALL();
+    @Select({"SELECT", SELECT_FIELDS, "FROM article"})
+    List<Article> getAll();
 
-    @Select("SELECT * FROM article WHERE id = #{id}")
+    @Select({"SELECT", SELECT_FIELDS, "FROM article WHERE id = #{id}"})
     Article getOne(int id);
 
-    @Insert("INSERT INTO article(title, content, likeNum, forwardNum, favouriteNum, commentNum) " +
+    @Insert("INSERT INTO article(title, content, creator, like_num, forward_num, favourite_num, comment_num, time) " +
             "VALUES(#{title}, #{content}, #{creator}, #{likeNum}, #{forwardNum}, #{favouriteNum}, " +
-            "#{commentNum})")
+            "#{commentNum}, #{time})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Article article);
 
-    @Update("UPDATE users SET title = #{title}, content = #{content}, creator = #{creator}, likeNum = #{likeNum}, " +
-            "forwardNum = #{forwardNum}, favouriteNum = #{favouriteNum}, commentNum = #{commentNum} WHERE id = #{id}")
+    @Update("UPDATE article SET title = #{title}, content = #{content}, creator = #{creator}, like_num = #{likeNum}, " +
+            "forward_num = #{forwardNum}, favourite_num = #{favouriteNum}, comment_num = #{commentNum} WHERE id = #{id}")
     int update(Article article);
 
-    @Delete("DELETE FROM users WHERE id =#{id}")
+    @Delete("DELETE FROM article WHERE id =#{id}")
     int delete(Integer id);
+
+//    @Select({"SELECT", SELECT_FIELDS, "FROM article WHERE user_id = #{userId}"})
+//    List<Article> getArticlesByUserId(Integer userId);
+
+//    @Select("SELECT * FROM article WHERE articleId = #{articleId} AND userId = #{userId}")
+//    Article findByArticleIdAndUserId(Integer articleId, Integer userId);
 
 }

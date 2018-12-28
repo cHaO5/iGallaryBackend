@@ -5,11 +5,21 @@
  */
 package j2ee.demo.controller;
 
+import com.google.gson.JsonObject;
+import j2ee.demo.authorization.annotation.Authorization;
+import j2ee.demo.configuration.ResultStatus;
 import j2ee.demo.model.Article;
 import io.swagger.annotations.*;
+import j2ee.demo.model.User;
+import j2ee.demo.model.UserLikes;
 import j2ee.demo.service.ArticleService;
+import j2ee.demo.service.UsersService;
+import j2ee.demo.utils.CorrectResult;
+import j2ee.demo.utils.ErrorResult;
+import j2ee.demo.utils.GetJsonContentUtils;
 import j2ee.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +37,25 @@ public class ArticlesController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private UsersService usersService;
+
     @ApiOperation(value = "删除分享", nickname = "articlesArticleIdDelete", notes = "", tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "动态删除成功"),
             @ApiResponse(code = 404, message = "某个分享不存在")})
+////    @Authorization
     @RequestMapping(value = "/articles/{ArticleId}",
             method = RequestMethod.DELETE)
-    Response articlesArticleIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId) {
+    public ResponseEntity<Object>  articlesArticleIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId) {
+        Article article = articleService.findByArticleId(articleId);
+        if (article == null) {
+            return new ResponseEntity<>(new ErrorResult("某个分享不存在"), HttpStatus.NOT_FOUND);
+        }
         articleService.deleteArticleById(articleId);
-        return new Response(200, "Success");
+//        return new Response(200, "Success");
+        return new ResponseEntity<>(new CorrectResult("动态删除成功"), HttpStatus.OK);
+
     }
 
 
@@ -43,11 +63,19 @@ public class ArticlesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "点赞取消成功"),
             @ApiResponse(code = 404, message = "某个用户或分享不存在")})
+//    @Authorization
     @RequestMapping(value = "/articles/{ArticleId}/likes/{UserId}",
             method = RequestMethod.DELETE)
-    Response articlesArticleIdLikesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        articleService.addArticleLikes(articleId, userId);
-        return new Response(201, "Success");
+    public ResponseEntity<Object>  articlesArticleIdLikesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+        Article article = articleService.findByArticleId(articleId);
+        User user = usersService.getUser(userId);
+        if (article == null || user == null) {
+            return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
+        }
+        // TODO 没法把整行信息全读出来，不知道为什么
+        articleService.deleteArticleLikes(articleId, userId);
+//        return new Response(201, "Success");
+        return new ResponseEntity<>(new CorrectResult("点赞取消成功"), HttpStatus.OK);
     }
 
 
@@ -56,37 +84,75 @@ public class ArticlesController {
             @ApiResponse(code = 201, message = "关注成功"),
             @ApiResponse(code = 404, message = "某个用户或分享不存在"),
             @ApiResponse(code = 409, message = "你已经关注了这篇分享...")})
+//    @Authorization
     @RequestMapping(value = "/articles/{ArticleId}/likes/{UserId}",
             method = RequestMethod.POST)
-    Response articlesArticleIdLikesUserIdPost(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        articleService.deleteArticleLikes(articleId, userId);
-        return new Response(201, "Success");
+    public ResponseEntity<Object>  articlesArticleIdLikesUserIdPost(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+        UserLikes userLikes = articleService.findLikesByArticleIdAndUserId(articleId, userId);
+        if (userLikes != null) {
+            return new ResponseEntity<>(new ErrorResult("你已经关注了这篇分享..."), HttpStatus.CONFLICT);
+        }
+        Article article = articleService.findByArticleId(articleId);
+        User user = usersService.getUser(userId);
+        if (article == null || user == null) {
+            return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
+        }
+        articleService.addArticleLikes(articleId, userId);
+//        return new Response(201, "Success");
+        return new ResponseEntity<>(new CorrectResult("关注成功"), HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "用户发表分享", nickname = "articlesPost", notes = "", response = Article.class, tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Post article successfully.", response = Article.class)})
+//    @Authorization
     @RequestMapping(value = "/articles",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    Response articlesPost(@ApiParam(value = "", required = true) @Valid @RequestBody Article body) {
+    public ResponseEntity<Object>  articlesPost(@ApiParam(value = "", required = true) @Valid @RequestBody Article body) {
         articleService.addArticle(body);
-        return new Response(201, "Post article successfully.");
+        JsonObject articleDto = new JsonObject();
+        articleDto.addProperty("Id", body.getId());
+        articleDto.addProperty("Title", body.getTitle());
+        articleDto.addProperty("Content", body.getContent());
+        articleDto.addProperty("Creator", body.getCreator());
+        articleDto.addProperty("LikeNum", body.getLikeNum());
+//        articleDto.addProperty("LikeNum", body.getLike_num());
+
+        articleDto.addProperty("ForwardNum", body.getForwardNum());
+        articleDto.addProperty("FAvouriteNum", body.getFavouriteNum());
+        articleDto.addProperty("CommentNum", body.getCommentNum());
+        articleDto.addProperty("Time", body.getTime());
+//        return new Response(201, "Post article successfully.");
+        return new ResponseEntity<>(articleDto.toString(), HttpStatus.CREATED);
     }
 
 
     @ApiOperation(value = "修改用户信息", nickname = "articlesPut", notes = "", response = Article.class, tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功修改分享", response = Article.class)})
+//    @Authorization
     @RequestMapping(value = "/articles",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.PUT)
-    Response articlesPut(@ApiParam(value = "", required = true) @Valid @RequestBody Article body) {
+    public ResponseEntity<Object>  articlesPut(@ApiParam(value = "", required = true) @Valid @RequestBody Article body) {
         articleService.modifyArticle(body);
-        return new Response(200, "Post article successfully.");
+//        return new Response(200, "Post article successfully.");
+        JsonObject articleDto = new JsonObject();
+        articleDto.addProperty("Id", body.getId());
+        articleDto.addProperty("Title", body.getTitle());
+        articleDto.addProperty("Content", body.getContent());
+        articleDto.addProperty("Creator", body.getCreator());
+        articleDto.addProperty("LikeNum", body.getLikeNum());
+//        articleDto.addProperty("LikeNum", body.getLike_num());
+        articleDto.addProperty("ForwardNum", body.getForwardNum());
+        articleDto.addProperty("FAvouriteNum", body.getFavouriteNum());
+        articleDto.addProperty("CommentNum", body.getCommentNum());
+        articleDto.addProperty("Time", body.getTime());
+        return new ResponseEntity<>(articleDto.toString(), HttpStatus.OK);
     }
 
 
@@ -94,12 +160,20 @@ public class ArticlesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功找到首页分享", response = Article.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "用户不存在")})
+//    @Authorization
     @RequestMapping(value = "/articles/{UserId}",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    Response articlesUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        articleService.getArticles(userId);
-        return new Response(200, "Post article successfully.");
+    public ResponseEntity<Object>  articlesUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+        User user = usersService.getUser(userId);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
+        }
+        List<Article> articles = articleService.getArticles(userId);
+//        return new Response(200, "Post article successfully.");
+        JsonObject receive = new JsonObject();
+        receive.add("article_list", GetJsonContentUtils.transListToJsonArray(articles));
+        return new ResponseEntity<>(receive.toString(), HttpStatus.OK);
     }
 
 }

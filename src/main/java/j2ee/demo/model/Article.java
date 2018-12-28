@@ -7,9 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -22,7 +20,7 @@ import javax.validation.constraints.*;
 @Entity
 public class Article   {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("Id")
   private Integer id = null;
 
@@ -35,6 +33,7 @@ public class Article   {
   @JsonProperty("Creator")
   private Integer creator = null;
 
+//  @Column(name = "like_num")
   @JsonProperty("LikeNum")
   private Integer likeNum = null;
 
@@ -138,13 +137,21 @@ public class Article   {
     return this;
   }
 
+
+
   /**
    * Get likeNum
    * @return likeNum
   **/
   @ApiModelProperty(example = "12", value = "")
 
-
+//  public Integer getLike_num() {
+//    return like_num;
+//  }
+//
+//  public void setLike_num(Integer like_num) {
+//    this.like_num = like_num;
+//  }
   public Integer getLikeNum() {
     return likeNum;
   }
@@ -248,6 +255,7 @@ public class Article   {
         Objects.equals(this.content, article.content) &&
         Objects.equals(this.creator, article.creator) &&
         Objects.equals(this.likeNum, article.likeNum) &&
+//            Objects.equals(this.like_num, article.like_num) &&
         Objects.equals(this.forwardNum, article.forwardNum) &&
         Objects.equals(this.favouriteNum, article.favouriteNum) &&
         Objects.equals(this.commentNum, article.commentNum) &&
@@ -269,6 +277,7 @@ public class Article   {
     sb.append("    content: ").append(toIndentedString(content)).append("\n");
     sb.append("    creator: ").append(toIndentedString(creator)).append("\n");
     sb.append("    likeNum: ").append(toIndentedString(likeNum)).append("\n");
+//    sb.append("    likeNum: ").append(toIndentedString(like_num)).append("\n");
     sb.append("    forwardNum: ").append(toIndentedString(forwardNum)).append("\n");
     sb.append("    favouriteNum: ").append(toIndentedString(favouriteNum)).append("\n");
     sb.append("    commentNum: ").append(toIndentedString(commentNum)).append("\n");
