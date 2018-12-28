@@ -72,7 +72,6 @@ public class ArticlesController {
         if (article == null || user == null) {
             return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
         }
-        // TODO 没法把整行信息全读出来，不知道为什么
         articleService.deleteArticleLikes(articleId, userId);
 //        return new Response(201, "Success");
         return new ResponseEntity<>(new CorrectResult("点赞取消成功"), HttpStatus.OK);

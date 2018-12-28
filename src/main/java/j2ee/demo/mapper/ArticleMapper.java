@@ -11,9 +11,15 @@ import java.util.List;
 public interface ArticleMapper {
     String SELECT_FIELDS = " id, title, content, creator, like_num, forward_num, favourite_num, comment_num, time ";
 
+    @ResultMap("articleMap")
     @Select({"SELECT", SELECT_FIELDS, "FROM article"})
     List<Article> getAll();
 
+    @Results(id = "articleMap", value = {
+            @Result(property = "likeNum", column = "like_num"),
+            @Result(property = "forwardNum", column = "forward_num"),
+            @Result(property = "favouriteNum", column = "favourite_num"),
+            @Result(property = "commentNum", column = "comment_num") })
     @Select({"SELECT", SELECT_FIELDS, "FROM article WHERE id = #{id}"})
     Article getOne(int id);
 
