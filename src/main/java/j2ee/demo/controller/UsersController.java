@@ -10,6 +10,7 @@ import j2ee.demo.model.User;
 import io.swagger.annotations.*;
 import j2ee.demo.service.UsersService;
 import j2ee.demo.utils.Response;
+import j2ee.demo.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
 @Api(value = "users", description = "the users API")
@@ -46,6 +49,9 @@ public class UsersController {
         if (usersName.size() != 0) {
             return new Response(409, "Error", "Username has been used.");
         }
+        body.setSalt(UUID.randomUUID().toString().substring(0, 5));
+        String password = body.getPassword();
+        body.setPassword(Utils.MD5(password + body.getSalt()));
         usersService.addUser(body);
         return new Response(200, "Success");
     }

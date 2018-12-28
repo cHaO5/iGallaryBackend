@@ -1,0 +1,74 @@
+package j2ee.demo.controller;
+
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import j2ee.demo.authorization.annotation.Authorization;
+import j2ee.demo.authorization.annotation.CurrentUser;
+import j2ee.demo.authorization.manager.TokenManager;
+import j2ee.demo.authorization.model.TokenModel;
+import j2ee.demo.configuration.ResultStatus;
+import j2ee.demo.mapper.UserMapper;
+import j2ee.demo.model.User;
+//import j2ee.demo.model.ResultModel;
+//import j2ee.demo.repository.UserRepository;
+//import com.wordnik.swagger.annotations.ApiImplicitParam;
+//import com.wordnik.swagger.annotations.ApiImplicitParams;
+//import com.wordnik.swagger.annotations.ApiOperation;
+import j2ee.demo.service.UsersService;
+import j2ee.demo.utils.Response;
+import j2ee.demo.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+/**
+ * 获取和删除token的请求地址，在Restful设计中其实就对应着登录和退出登录的资源映射
+ */
+@RestController
+@RequestMapping("/tokens")
+public class TokenController {
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private TokenManager tokenManager;
+
+
+    @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value = "登录")
+    public Response login(@RequestParam String username, @RequestParam String password) {
+        Assert.notNull(username, "username can not be empty");
+        Assert.notNull(password, "password can not be empty");
+
+        List<User> user = usersService.findByUsername(username);
+        if (user == null ||  //未注册
+                !(user.get(0).getPassword() + user.get(0).getSalt()).equals(Utils.MD5(password + user.get(0).getSalt()))) {  //密码错误
+            //提示用户名或密码错误
+            return new Response(401, "Error", ResultStatus.USERNAME_OR_PASSWORD_ERROR);
+        }
+        //生成一个token，保存用户登录状态
+        TokenModel model = tokenManager.createToken(user.get(0).getId());
+        return new Response(200, "Success", model);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    @Authorization
+    @ApiOperation(value = "退出登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public Response logout(@CurrentUser User user) {
+        tokenManager.deleteToken(user.getId());
+        return new Response(200, "Success");
+    }
+
+}

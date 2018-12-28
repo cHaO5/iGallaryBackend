@@ -15,8 +15,8 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE id = #{id}")
     User getOne(int id);
 
-    @Insert("INSERT INTO users(password, description, avatar, email, username)" +
-            " VALUES(#{password}, #{description}, #{avatar}, #{email}, #{username})")
+    @Insert("INSERT INTO users(password, description, avatar, email, username, salt)" +
+            " VALUES(#{password}, #{description}, #{avatar}, #{email}, #{username}, #{salt})")
     int insert(User user);
 
     @Update("UPDATE users SET password=#{password}, description=#{description}, avatar=#{avatar}, " +

@@ -43,6 +43,17 @@ public class User   {
   @JsonProperty("Username")
   private String username = null;
 
+  @JsonProperty("Salt")
+  private String salt = null;
+
+  public String getSalt() {
+    return salt;
+  }
+
+  public void setSalt(String salt) {
+    this.salt = salt;
+  }
+
   public User id(Integer id) {
     this.id = id;
     return this;
