@@ -17,7 +17,7 @@ public class WebSocketCustomizedConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketCustomizedHandler(), "/customizedConnectPath")
+        registry.addHandler(new WebSocketCustomizedHandler(), WebSocketConstant.CONNECT_PATH_WITHOUT_STOMP)
                 .addInterceptors(new WebSocketCustomizedInterceptor())
                 .setAllowedOrigins("*");
     }
