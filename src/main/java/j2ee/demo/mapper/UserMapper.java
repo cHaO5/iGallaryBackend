@@ -17,6 +17,7 @@ public interface UserMapper {
 
     @Insert("INSERT INTO users(password, description, avatar, email, username, salt)" +
             " VALUES(#{password}, #{description}, #{avatar}, #{email}, #{username}, #{salt})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(User user);
 
     @Update("UPDATE users SET password=#{password}, description=#{description}, avatar=#{avatar}, " +
@@ -27,8 +28,8 @@ public interface UserMapper {
     int delete(int id);
 
     @Select("SELECT * FROM users WHERE username = #{username}")
-    List<User> findByUsername(String username);
+    User findByUsername(String username);
 
     @Select("SELECT * FROM users WHERE email = #{email}")
-    List<User> findByEmail(String email);
+    User findByEmail(String email);
 }

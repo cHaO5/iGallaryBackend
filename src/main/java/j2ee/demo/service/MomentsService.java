@@ -1,6 +1,7 @@
 package j2ee.demo.service;
 
 import j2ee.demo.model.Moment;
+import j2ee.demo.model.UserLikes;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface MomentsService {
     int modifyMoment(Moment moment);
 
     List<Moment> getMoment(Integer userId);
+
+    Moment findByMomentId(Integer momentId);
+
+    UserLikes findLikesByMomentIdAndUserId(Integer momentId, Integer userId);
 }

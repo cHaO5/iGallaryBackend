@@ -4,6 +4,7 @@ import j2ee.demo.model.Favourites;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import javax.websocket.server.ServerEndpoint;
 import java.util.List;
 
 //@Mapper
@@ -13,7 +14,7 @@ public interface FavouriteMapper {
     List<Favourites> getALL();
 
     @Select("SELECT * FROM favourites WHERE id = #{id}")
-    Favourites getOne(int id);
+    Favourites findByFavId(int id);
 
     @Insert("INSERT INTO favourites(creator, name) VALUES(#{creator}, #{name})")
     @Options(useGeneratedKeys=true, keyProperty="id", keyColumn="id")
@@ -27,4 +28,5 @@ public interface FavouriteMapper {
 
     @Select("SELECT * FROM favourites WHERE name = #{name}")
     Favourites findByName(String name);
+
 }

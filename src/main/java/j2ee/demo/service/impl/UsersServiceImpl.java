@@ -11,6 +11,7 @@ import j2ee.demo.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.websocket.OnError;
 import java.util.List;
 
 @Service(value = "usersService")
@@ -32,10 +33,11 @@ public class UsersServiceImpl implements UsersService {
         return userMapper.insert(user);
     }
 
-    @Override
-    public List<Integer> getFavourite(Integer userId, Integer favId) {
-        return favouritesMomentMapper.getMomentsInFavourites(favId);
-    }
+//    @Override
+//    public Favourites findByUserIdAndFavId(Integer userId, Integer favId) {
+////        return favouritesMomentMapper.getMomentsInFavourites(favId);
+//        return favouriteMapper.findByUserIdAndFavId(userId, favId);
+//    }
 
     @Override
     public int unfollow(Integer userId, Integer followedUserId) {
@@ -53,6 +55,11 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public List<Integer> getFollow(Integer userId) {
         return userFollowMapper.followTo(userId);
+    }
+
+    @Override
+    public UserFollow findByUserIdAndFollowTo(Integer userId, Integer followTo) {
+        return userFollowMapper.findByUserIdAndFollowTo(userId, followTo);
     }
 
     @Override

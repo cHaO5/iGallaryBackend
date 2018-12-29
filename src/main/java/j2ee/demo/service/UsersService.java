@@ -2,13 +2,14 @@ package j2ee.demo.service;
 
 import j2ee.demo.model.Favourites;
 import j2ee.demo.model.User;
+import j2ee.demo.model.UserFollow;
 
 import java.util.List;
 
 public interface UsersService {
     int addUser(User user);
 
-    List<Integer> getFavourite(Integer userId, Integer favId);
+//    List<Integer> getFavourite(Integer userId, Integer favId);
 
     int unfollow(Integer userId, Integer followedUserId);
 
@@ -23,4 +24,6 @@ public interface UsersService {
     User findByEmail(String email);
 
     User findByUsername(String username);
+
+    UserFollow findByUserIdAndFollowTo(Integer userId, Integer followTo);
 }

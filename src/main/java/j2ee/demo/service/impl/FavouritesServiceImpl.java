@@ -25,4 +25,9 @@ public class FavouritesServiceImpl implements FavouritesService {
     public Favourites findByName(String name) {
         return favouriteMapper.findByName(name);
     }
+
+    @Override
+    public Favourites findByFavId(Integer favId) {
+        return favouriteMapper.findByFavId(favId);
+    }
 }

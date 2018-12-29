@@ -8,4 +8,6 @@ public interface FavouritesService {
     int deleteFavourite(Integer userId, Integer favouriteId);
 
     Favourites findByName(String name);
+
+    Favourites findByFavId(Integer favId);
 }
