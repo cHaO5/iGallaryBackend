@@ -19,25 +19,14 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private FavouriteMapper favouriteMapper;
 
     @Autowired
     private UserFollowMapper userFollowMapper;
-
-    @Autowired
-    private FavouritesMomentMapper favouritesMomentMapper;
 
     @Override
     public int addUser(User user) {
         return userMapper.insert(user);
     }
-
-//    @Override
-//    public Favourites findByUserIdAndFavId(Integer userId, Integer favId) {
-////        return favouritesMomentMapper.getMomentsInFavourites(favId);
-//        return favouriteMapper.findByUserIdAndFavId(userId, favId);
-//    }
 
     @Override
     public int unfollow(Integer userId, Integer followedUserId) {

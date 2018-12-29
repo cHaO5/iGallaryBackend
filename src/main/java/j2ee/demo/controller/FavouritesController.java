@@ -7,9 +7,12 @@ package j2ee.demo.controller;
 
 import com.google.gson.JsonObject;
 import j2ee.demo.authorization.annotation.Authorization;
-import j2ee.demo.model.Favourites;
+import j2ee.demo.model.*;
 import io.swagger.annotations.*;
 import j2ee.demo.service.FavouritesService;
+import j2ee.demo.service.MomentsService;
+import j2ee.demo.service.UsersService;
+import j2ee.demo.service.WebSocketService;
 import j2ee.demo.utils.CorrectResult;
 import j2ee.demo.utils.ErrorResult;
 import j2ee.demo.utils.Response;
@@ -32,6 +35,15 @@ import java.util.Map;
 public class FavouritesController {
     @Autowired
     private FavouritesService favouritesService;
+
+    @Autowired
+    private MomentsService momentsService;
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private WebSocketService webSocketService;
 
     @ApiOperation(value = "", nickname = "favouritesUserIdDelete", notes = "删除一个收藏夹", response = Favourites.class, tags = {"favourite",})
     @ApiResponses(value = {
@@ -69,6 +81,60 @@ public class FavouritesController {
         favDto.addProperty("Creator", body.getCreator());
         favDto.addProperty("Name", body.getName());
         return new ResponseEntity<>(favDto.toString(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "将动态添加至收藏夹", nickname = "favouritesMomentPost", notes = "", tags = {"favourite",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "成功添加至收藏夹", response = FavouritesMoment.class)})
+//    @Authorization
+    @RequestMapping(value = "/favourites/{FavId}/moments/{MomentId}",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    public ResponseEntity<Object>  favouritesMomentPost(@ApiParam(value = "", required = true) @PathVariable("FavId") Integer favId, @ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId) {
+        FavouritesMoment favouritesMoment = new FavouritesMoment(favId, momentId);
+        favouritesService.addMomentToFavourites(favouritesMoment);
+
+        Moment moment = momentsService.findByMomentId(momentId);
+        Favourites favourites = favouritesService.findByFavId(favId);
+        User user = usersService.getUser(favourites.getCreator());
+        String result = user.getUsername() + "收藏了你的分享！";
+        webSocketService.send2User(moment.getCreator(), new WiselyResponse(result));
+
+//        return new Response(201, "Success");
+        JsonObject favDto = new JsonObject();
+        favDto.addProperty("Id", favouritesMoment.getId());
+        favDto.addProperty("FavouritesId", favouritesMoment.getFavouritesId());
+        favDto.addProperty("MomentId", favouritesMoment.getMomentId());
+        return new ResponseEntity<>(favDto.toString(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "将动态从收藏夹中移除", nickname = "favouritesMomentDelete", notes = "", tags = {"favourite",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "成功移除")})
+//    @Authorization
+    @RequestMapping(value = "/favourites/{FavId}/moments/{MomentId}",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.DELETE)
+    public ResponseEntity<Object>  favouritesMomentDelete(@ApiParam(value = "", required = true) @PathVariable("FavId") Integer favId, @ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId) {
+        favouritesService.deleteFavouritesMoment(favId, momentId);
+//        return new Response(201, "Success");
+        return new ResponseEntity<>(new CorrectResult("成功移除"), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "将动态移动到另一收藏夹", nickname = "favouritesMomentPut", notes = "", tags = {"favourite",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "成功移动至新收藏夹", response = FavouritesMoment.class)})
+//    @Authorization
+    @RequestMapping(value = "/favourites/moments/{FavId}",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    public ResponseEntity<Object>  favouritesMomentPut(@ApiParam(value = "", required = true)@Valid @RequestBody FavouritesMoment favouritesMoment, @ApiParam(value = "", required = true) @PathVariable("FavId") Integer favId) {
+        favouritesService.moveToFavourites(favouritesMoment.getId(), favId);
+//        return new Response(201, "Success");
+        return new ResponseEntity<>(new CorrectResult("成功移动至新收藏夹"), HttpStatus.OK);
     }
 
 }

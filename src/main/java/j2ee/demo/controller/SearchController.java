@@ -30,6 +30,7 @@ public class SearchController {
     @RequestMapping(value = "/_search",
             method = RequestMethod.GET)
     public ResponseEntity<Object>  searchGet() {
+        // TODO search page
         return null;
     }
 

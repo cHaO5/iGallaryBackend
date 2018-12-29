@@ -1,6 +1,7 @@
 package j2ee.demo.service;
 
 import j2ee.demo.model.Favourites;
+import j2ee.demo.model.FavouritesMoment;
 
 import java.util.List;
 
@@ -14,4 +15,10 @@ public interface FavouritesService {
     Favourites findByFavId(Integer favId);
 
     Integer findMomentFavouriteByUserIdAndMomentId(Integer userId, Integer momentId);
+
+    Integer addMomentToFavourites(FavouritesMoment favouritesMoment);
+
+    Integer deleteFavouritesMoment(Integer favId, Integer momentId);
+
+    Integer moveToFavourites(Integer favMomId, Integer favId);
 }
