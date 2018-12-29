@@ -34,7 +34,6 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public List<Integer> getFavourite(Integer userId, Integer favId) {
-        // TODO Add favourite function
         return favouritesMomentMapper.getMomentsInFavourites(favId);
     }
 

@@ -5,19 +5,28 @@
  */
 package j2ee.demo.controller;
 
+import com.google.gson.JsonObject;
 import j2ee.demo.model.Moment;
 import j2ee.demo.model.MomentComment;
+import j2ee.demo.authorization.annotation.Authorization;
 import io.swagger.annotations.*;
 import j2ee.demo.service.CommentsService;
+import j2ee.demo.utils.CorrectResult;
+import j2ee.demo.utils.GetJsonContentUtils;
 import j2ee.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
@@ -28,53 +37,90 @@ public class CommentsController {
     @Autowired
     private CommentsService commentService;
 
-    @ApiOperation(value = "", nickname = "commentsCommentIdDelete", notes = "删除一个收藏夹", tags = {"comment",})
+    @ApiOperation(value = "删除评论", nickname = "commentsCommentIdDelete", notes = "", tags = {"comment",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "取消关注成功")})
+//    @Authorization
     @RequestMapping(value = "/comments/{CommentId}",
             method = RequestMethod.DELETE)
-    Response commentsCommentIdDelete(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
+    public ResponseEntity<Object>  commentsCommentIdDelete(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
         commentService.deleteComment(commentId);
-        return new Response(200, "Success");
+//        return new Response(200, "Success");
+        return new ResponseEntity<>(new CorrectResult("取消关注成功"), HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "查看评论", nickname = "commentsCommentIdGet", notes = "", response = MomentComment.class, tags = {"comment",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功返回评论", response = MomentComment.class)})
+//    @Authorization
     @RequestMapping(value = "/comments/{CommentId}",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    Response commentsCommentIdGet(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
+    public ResponseEntity<Object>  commentsCommentIdGet(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
         MomentComment momentComment = commentService.getComment(commentId);
-        return new Response(200, "Success", momentComment);
+//        return new Response(200, "Success", momentComment);
+        // TODO 时间格式转换
+        JsonObject commentDto = new JsonObject();
+        commentDto.addProperty("Id", momentComment.getId());
+        commentDto.addProperty("MomentId", momentComment.getMomentId());
+        commentDto.addProperty("SenderId",momentComment.getSenderId());
+        commentDto.addProperty("Content", momentComment.getContent());
+        commentDto.addProperty("QuoteId", momentComment.getQuoteId());
+        commentDto.addProperty("CreateTime", momentComment.getCreateTime().toString());
+        return new ResponseEntity<>(commentDto.toString(), HttpStatus.OK);
     }
 
 
-    @ApiOperation(value = "", nickname = "commentsCommentIdPut", notes = "修改评论", response = MomentComment.class, tags = {"comment",})
+    @ApiOperation(value = "修改评论", nickname = "commentsCommentIdPut", notes = "修改评论", response = MomentComment.class, tags = {"comment",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Post comment successfully.", response = MomentComment.class),
             @ApiResponse(code = 409, message = "收藏夹名字冲突")})
+//    @Authorization
     @RequestMapping(value = "/comments/{CommentId}",
+
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.PUT)
-    Response commentsCommentIdPut(@ApiParam(value = "", required = true) @Valid @RequestBody MomentComment body, @ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
-        commentService.modifyComment(commentId, body);
-        return new Response(200, "Success");
+    public ResponseEntity<Object>  commentsCommentIdPut(@ApiParam(value = "", required = true) @Valid @RequestBody MomentComment body, @ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
+        body.setId(commentId);
+        commentService.modifyComment(body);
+//        return new Response(200, "Success");
+        JsonObject commentDto = new JsonObject();
+        commentDto.addProperty("Id", body.getId());
+        commentDto.addProperty("MomentId", body.getMomentId());
+        commentDto.addProperty("SenderId", body.getSenderId());
+        commentDto.addProperty("Content", body.getContent());
+        commentDto.addProperty("QuoteId", body.getQuoteId());
+        commentDto.addProperty("CreateTime", body.getCreateTime().toString());
+//        JsonObject receive = new JsonObject();
+//        receive.add("receive", commentDto);
+        return new ResponseEntity<>(commentDto.toString(), HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "用户发表评论", nickname = "commentsPost", notes = "", response = MomentComment.class, tags = {"comment",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Post comment successfully.", response = MomentComment.class)})
+//    @Authorization
     @RequestMapping(value = "/comments",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    Response commentsPost(@ApiParam(value = "", required = true) @Valid @RequestBody MomentComment body) {
+    public ResponseEntity<Object>  commentsPost(@ApiParam(value = "", required = true) @Valid @RequestBody MomentComment body) {
+//        Date date = Date.valueOf(body.getCreateTime());
+//        body.setCreateTime(body.getCreateTime());
         commentService.addComment(body);
-        return new Response(200, "Success");
+        System.out.println(body.getCreateTime());
+//        return new Response(200, "Success");
+        JsonObject commentDto = new JsonObject();
+        commentDto.addProperty("Id", body.getId());
+        commentDto.addProperty("MomentId", body.getMomentId());
+        commentDto.addProperty("SenderId", body.getSenderId());
+        commentDto.addProperty("Content", body.getContent());
+        commentDto.addProperty("QuoteId", body.getQuoteId());
+        commentDto.addProperty("CreateTime", body.getCreateTime().toString());
+        return new ResponseEntity<>(commentDto.toString(), HttpStatus.CREATED);
     }
 
 }

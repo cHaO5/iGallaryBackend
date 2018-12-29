@@ -7,7 +7,7 @@ public interface CommentsService {
 
     MomentComment getComment(Integer commentId);
 
-    int modifyComment(Integer commentId, MomentComment momentComment);
+    int modifyComment(MomentComment momentComment);
 
     int addComment(MomentComment momentComment);
 }

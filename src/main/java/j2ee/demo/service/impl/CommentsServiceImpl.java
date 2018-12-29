@@ -22,7 +22,7 @@ public class CommentsServiceImpl implements CommentsService {
     }
 
     @Override
-    public int modifyComment(Integer commentId, MomentComment momentComment) {
+    public int modifyComment(MomentComment momentComment) {
         return momentCommentMapper.update(momentComment);
     }
 
