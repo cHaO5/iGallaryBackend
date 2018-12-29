@@ -5,6 +5,7 @@
  */
 package j2ee.demo.controller;
 
+import j2ee.demo.authorization.annotation.Authorization;
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
 import j2ee.demo.utils.Response;
@@ -27,10 +28,12 @@ public class DiscoveriesController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功找到发现页", response = Moment.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "用户不存在")})
+//    @Authorization
     @RequestMapping(value = "/discoveries/{UserId}",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    Response discoveriesUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+    public ResponseEntity<Object>  discoveriesUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+        // TODO discovery page
         return null;
     }
 

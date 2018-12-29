@@ -20,4 +20,9 @@ public class FavouritesServiceImpl implements FavouritesService {
     public int deleteFavourite(Integer userId, Integer favouriteId) {
         return favouriteMapper.delete(favouriteId);
     }
+
+    @Override
+    public Favourites findByName(String name) {
+        return favouriteMapper.findByName(name);
+    }
 }

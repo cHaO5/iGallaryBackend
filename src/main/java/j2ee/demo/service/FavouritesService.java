@@ -6,4 +6,6 @@ public interface FavouritesService {
     int addFavourite(Integer userId, Favourites favourites);
 
     int deleteFavourite(Integer userId, Integer favouriteId);
+
+    Favourites findByName(String name);
 }

@@ -5,11 +5,16 @@
  */
 package j2ee.demo.controller;
 
+import com.google.gson.JsonObject;
+import j2ee.demo.authorization.annotation.Authorization;
 import j2ee.demo.model.Favourites;
 import io.swagger.annotations.*;
 import j2ee.demo.service.FavouritesService;
+import j2ee.demo.utils.CorrectResult;
+import j2ee.demo.utils.ErrorResult;
 import j2ee.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +34,16 @@ public class FavouritesController {
 
     @ApiOperation(value = "", nickname = "favouritesUserIdDelete", notes = "删除一个收藏夹", response = Favourites.class, tags = {"favourite",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "成功创建收藏夹", response = Favourites.class),
+            @ApiResponse(code = 201, message = "成功删除收藏夹", response = Favourites.class),
             @ApiResponse(code = 409, message = "收藏夹名字冲突")})
+//    @Authorization
     @RequestMapping(value = "/favourites/{UserId}/{FavouritesId}",
             produces = {"application/json"},
             method = RequestMethod.DELETE)
-    Response favouritesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @PathVariable("FavouritesId") Integer favouritesId) {
+    public ResponseEntity<Object>  favouritesUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @PathVariable("FavouritesId") Integer favouritesId) {
         favouritesService.deleteFavourite(userId, favouritesId);
-        return new Response(200, "Success");
+//        return new Response(200, "Success");
+        return new ResponseEntity<>(new CorrectResult("Success"), HttpStatus.OK);
     }
 
 
@@ -44,13 +51,23 @@ public class FavouritesController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "成功创建收藏夹", response = Favourites.class),
             @ApiResponse(code = 409, message = "收藏夹名字冲突")})
+//    @Authorization
     @RequestMapping(value = "/favourites/{UserId}",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    Response favouritesUserIdPost(@ApiParam(value = "", required = true) @Valid @RequestBody Favourites body, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+    public ResponseEntity<Object>  favouritesUserIdPost(@ApiParam(value = "", required = true) @Valid @RequestBody Favourites body, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
+        Favourites favourites = favouritesService.findByName(body.getName());
+        if (favourites != null) {
+            return new ResponseEntity<>(new ErrorResult("收藏夹名字冲突"), HttpStatus.CONFLICT);
+        }
         favouritesService.addFavourite(userId, body);
-        return new Response(201, "Success");
+//        return new Response(201, "Success");
+        JsonObject favDto = new JsonObject();
+        favDto.addProperty("Id", body.getId());
+        favDto.addProperty("Creator", body.getCreator());
+        favDto.addProperty("Name", body.getName());
+        return new ResponseEntity<>(favDto.toString(), HttpStatus.OK);
     }
 
 }

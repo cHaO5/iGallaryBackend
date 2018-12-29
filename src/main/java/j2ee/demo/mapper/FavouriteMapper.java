@@ -24,4 +24,7 @@ public interface FavouriteMapper {
 
     @Delete("DELETE FROM favourites WHERE id =#{id}")
     int delete(int id);
+
+    @Select("SELECT * FROM favourites WHERE name = #{name}")
+    Favourites findByName(String name);
 }

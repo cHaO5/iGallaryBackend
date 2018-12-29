@@ -28,7 +28,7 @@ public class SearchController {
             @ApiResponse(code = 404, message = "未找到相关结果")})
     @RequestMapping(value = "/_search",
             method = RequestMethod.GET)
-    Response searchGet() {
+    public ResponseEntity<Object>  searchGet() {
         return null;
     }
 
