@@ -29,4 +29,9 @@ public interface FavouriteMapper {
     @Select("SELECT * FROM favourites WHERE name = #{name}")
     Favourites findByName(String name);
 
+    @Select("SELECT moment_id FROM favourites_moment" +
+            " LEFT JOIN favourites" +
+            " ON favourites.id = favourites_moment.favourites_id" +
+            " WHERE favourites.creator = #{userId} AND favourites_moment.moment_id =#{momentId}")
+    Integer findMomentFavouriteByUserIdAndMomentId(@Param("userId") Integer userId, @Param("momentId") Integer momentId);
 }

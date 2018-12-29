@@ -6,16 +6,19 @@
 package j2ee.demo.controller;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import j2ee.demo.authorization.annotation.Authorization;
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
 import j2ee.demo.model.User;
 import j2ee.demo.model.UserLikes;
+import j2ee.demo.service.FavouritesService;
 import j2ee.demo.service.MomentsService;
 import j2ee.demo.service.UsersService;
 import j2ee.demo.utils.CorrectResult;
 import j2ee.demo.utils.ErrorResult;
+import j2ee.demo.utils.GetJsonContentUtils;
 import j2ee.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
+@CrossOrigin("*")
 @Api(value = "moments", description = "the moments API")
 @RestController
 public class MomentsController {
@@ -40,6 +44,9 @@ public class MomentsController {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private FavouritesService favouritesService;
 
     @ApiOperation(value = "删除动态", nickname = "momentsMomentIdDelete", notes = "", tags = {"moment",})
     @ApiResponses(value = {
@@ -187,8 +194,37 @@ public class MomentsController {
             return new ResponseEntity<>(new ErrorResult("某个用户不存在"), HttpStatus.NOT_FOUND);
         }
         List<Moment> data = momentsService.getMoment(userId);
+        JsonArray jsonArray = new JsonArray();
+        for (Moment moment : data) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("Id", moment.getId());
+            jsonObject.addProperty("Content", moment.getContent());
+            jsonObject.addProperty("Creator", moment.getCreator());
+            jsonObject.addProperty("LikeNum", moment.getLikeNum());
+            jsonObject.addProperty("ForwardNum", moment.getForwardNum());
+            jsonObject.addProperty("FavouriteNum", moment.getFavouriteNum());
+            jsonObject.addProperty("CommentNum", moment.getCommentNum());
+            jsonObject.addProperty("Time", moment.getTime());
+            jsonObject.addProperty("Tags", moment.getTags());
+            UserLikes userLikes = momentsService.findLikesByMomentIdAndUserId(moment.getId(), userId);
+            if (userLikes == null) {
+                jsonObject.addProperty("LikesStatus", 0);
+            } else {
+                jsonObject.addProperty("LikesStatus", 1);
+            }
+            Integer checkId = favouritesService.findMomentFavouriteByUserIdAndMomentId(userId, moment.getId());
+            if (checkId == null) {
+                jsonObject.addProperty("FavouriteStatus", 0);
+            } else {
+                jsonObject.addProperty("FavouriteStatus", 1);
+            }
+            jsonArray.add(jsonObject);
+        }
 //        return new Response(200, "Success", data);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        JsonObject receive = new JsonObject();
+//        receive.add("data", GetJsonContentUtils.transListToJsonArray(data));
+        receive.add("data", jsonArray);
+        return new ResponseEntity<>(receive.toString(), HttpStatus.OK);
     }
 
 }

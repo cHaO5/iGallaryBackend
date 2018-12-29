@@ -27,16 +27,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * 获取和删除token的请求地址，在Restful设计中其实就对应着登录和退出登录的资源映射
  */
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/tokens")
 public class TokenController {

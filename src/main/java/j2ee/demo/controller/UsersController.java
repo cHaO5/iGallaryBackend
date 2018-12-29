@@ -29,6 +29,7 @@ import java.util.UUID;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
+@CrossOrigin("*")
 @Api(value = "users", description = "the users API")
 @RestController
 public class UsersController {
@@ -191,6 +192,26 @@ public class UsersController {
             method = RequestMethod.PUT)
     public ResponseEntity<Object>  usersUserIdPut(@ApiParam(value = "", required = true) @Valid @RequestBody User body, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
         usersService.modifyUser(userId, body);
+//        return new Response(200, "Success");
+        JsonObject userDto = new JsonObject();
+        userDto.addProperty("Id", body.getId());
+        userDto.addProperty("Description", body.getDescription());
+        userDto.addProperty("Avatar", body.getAvatar());
+        userDto.addProperty("Email", body.getEmail());
+        userDto.addProperty("Username", body.getUsername());
+        return new ResponseEntity<>(userDto.toString(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "忘记密码", nickname = "usersUserIdPut", notes = "", response = User.class, tags = {"user",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "成功修改用户信息", response = User.class)})
+//    @Authorization
+    @RequestMapping(value = "/users/password",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.PUT)
+    public ResponseEntity<Object>  usersForgetPasswordPut(@ApiParam(value = "", required = true) @Valid @RequestBody User body) {
+        usersService.forgetPassword(body);
 //        return new Response(200, "Success");
         JsonObject userDto = new JsonObject();
         userDto.addProperty("Id", body.getId());

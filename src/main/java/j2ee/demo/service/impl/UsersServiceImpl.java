@@ -81,4 +81,9 @@ public class UsersServiceImpl implements UsersService {
     public User findByUsername(String username) {
         return userMapper.findByUsername(username);
     }
+
+    @Override
+    public int forgetPassword(User user) {
+        return userMapper.modifyByEmail(user);
+    }
 }

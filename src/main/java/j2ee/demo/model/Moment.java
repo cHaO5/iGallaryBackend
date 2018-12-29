@@ -48,7 +48,7 @@ public class Moment   {
   @JsonProperty("Time")
   private String time = null;
 
-  @JsonProperty("Tag")
+  @JsonProperty("Tags")
   private String tags = null;
 
   public Moment id(Integer id) {

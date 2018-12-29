@@ -32,4 +32,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM users WHERE email = #{email}")
     User findByEmail(String email);
+
+    @Update("UPDATE users SET password=#{password} WHERE email =#{email}")
+    int modifyByEmail(User user);
 }

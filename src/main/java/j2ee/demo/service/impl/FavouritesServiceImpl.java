@@ -6,6 +6,8 @@ import j2ee.demo.service.FavouritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service(value = "favouritesService")
 public class FavouritesServiceImpl implements FavouritesService {
     @Autowired
@@ -29,5 +31,10 @@ public class FavouritesServiceImpl implements FavouritesService {
     @Override
     public Favourites findByFavId(Integer favId) {
         return favouriteMapper.findByFavId(favId);
+    }
+
+    @Override
+    public Integer findMomentFavouriteByUserIdAndMomentId(Integer userId, Integer momentId) {
+        return favouriteMapper.findMomentFavouriteByUserIdAndMomentId(userId, momentId);
     }
 }

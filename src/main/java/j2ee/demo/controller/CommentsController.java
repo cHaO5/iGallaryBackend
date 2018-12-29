@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
+@CrossOrigin("*")
 @Api(value = "comments", description = "the comments API")
 @RestController
 public class CommentsController {

@@ -26,4 +26,6 @@ public interface UsersService {
     User findByUsername(String username);
 
     UserFollow findByUserIdAndFollowTo(Integer userId, Integer followTo);
+
+    int forgetPassword(User user);
 }
