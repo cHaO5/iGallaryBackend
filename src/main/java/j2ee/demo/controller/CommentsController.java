@@ -10,7 +10,12 @@ import j2ee.demo.model.Moment;
 import j2ee.demo.model.MomentComment;
 import j2ee.demo.authorization.annotation.Authorization;
 import io.swagger.annotations.*;
+import j2ee.demo.model.User;
+import j2ee.demo.model.WiselyResponse;
 import j2ee.demo.service.CommentsService;
+import j2ee.demo.service.MomentsService;
+import j2ee.demo.service.UsersService;
+import j2ee.demo.service.WebSocketService;
 import j2ee.demo.utils.CorrectResult;
 import j2ee.demo.utils.GetJsonContentUtils;
 import j2ee.demo.utils.Response;
@@ -37,6 +42,15 @@ import java.util.Map;
 public class CommentsController {
     @Autowired
     private CommentsService commentService;
+
+    @Autowired
+    private WebSocketService webSocketService;
+
+    @Autowired
+    private MomentsService momentsService;
+
+    @Autowired
+    private UsersService usersService;
 
     @ApiOperation(value = "删除评论", nickname = "commentsCommentIdDelete", notes = "", tags = {"comment",})
     @ApiResponses(value = {
@@ -113,6 +127,12 @@ public class CommentsController {
 //        body.setCreateTime(body.getCreateTime());
         commentService.addComment(body);
         System.out.println(body.getCreateTime());
+
+        Moment moment = momentsService.findByMomentId(body.getMomentId());
+        User user = usersService.getUser(body.getSenderId());
+        String result = user.getUsername() + "给你发了一条评论！";
+        webSocketService.send2User(moment.getCreator(), new WiselyResponse(result));
+
 //        return new Response(200, "Success");
         JsonObject commentDto = new JsonObject();
         commentDto.addProperty("Id", body.getId());

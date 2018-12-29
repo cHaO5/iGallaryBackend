@@ -8,14 +8,17 @@ package j2ee.demo.controller;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.sun.nio.sctp.Notification;
 import j2ee.demo.authorization.annotation.Authorization;
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
 import j2ee.demo.model.User;
 import j2ee.demo.model.UserLikes;
+import j2ee.demo.model.WiselyResponse;
 import j2ee.demo.service.FavouritesService;
 import j2ee.demo.service.MomentsService;
 import j2ee.demo.service.UsersService;
+import j2ee.demo.service.WebSocketService;
 import j2ee.demo.utils.CorrectResult;
 import j2ee.demo.utils.ErrorResult;
 import j2ee.demo.utils.GetJsonContentUtils;
@@ -23,6 +26,7 @@ import j2ee.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +51,11 @@ public class MomentsController {
 
     @Autowired
     private FavouritesService favouritesService;
+
+//    @Autowired
+//    private SimpMessageSendingOperations simpMessageSendingOperations;
+    @Autowired
+    private WebSocketService webSocketService;
 
     @ApiOperation(value = "删除动态", nickname = "momentsMomentIdDelete", notes = "", tags = {"moment",})
     @ApiResponses(value = {
@@ -81,6 +90,9 @@ public class MomentsController {
         }
         momentsService.forward(momentId, userId);
 //        return new Response(201, "Success");
+
+        String result = user.getUsername() + "转发了你的动态！";
+        webSocketService.send2User(moment.getCreator(), new WiselyResponse(result));
         return new ResponseEntity<>(new CorrectResult("转发成功"), HttpStatus.CREATED);
     }
 
@@ -123,6 +135,10 @@ public class MomentsController {
         }
         momentsService.addMomentLikes(momentId, userId);
 //        return new Response(201, "Success");
+        String result = user.getUsername() + "给你点了个赞！";
+        Moment moment = momentsService.findByMomentId(momentId);
+//        simpMessageSendingOperations.convertAndSendToUser(moment.getCreator().toString(), "/queue/notifications", user.getUsername() + "给你点赞啦!");
+        webSocketService.send2User(moment.getCreator(), new WiselyResponse(result));
         return new ResponseEntity<>(new CorrectResult("关注成功"), HttpStatus.CREATED);
     }
 

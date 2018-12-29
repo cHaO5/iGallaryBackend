@@ -38,4 +38,9 @@ public class WebSocketService {
             template.convertAndSendToUser(userName, WebSocketConstant.P2P_PUSH_POSTFIX, msg);
         });
     }
+
+    public void send2User(Integer userId, WiselyResponse msg) {
+        System.out.println("sendTo: " + userId);
+        template.convertAndSendToUser(userId.toString(), WebSocketConstant.P2P_PUSH_POSTFIX, msg);
+    }
 }

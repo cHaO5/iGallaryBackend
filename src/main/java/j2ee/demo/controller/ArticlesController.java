@@ -12,8 +12,10 @@ import j2ee.demo.model.Article;
 import io.swagger.annotations.*;
 import j2ee.demo.model.User;
 import j2ee.demo.model.UserLikes;
+import j2ee.demo.model.WiselyResponse;
 import j2ee.demo.service.ArticleService;
 import j2ee.demo.service.UsersService;
+import j2ee.demo.service.WebSocketService;
 import j2ee.demo.utils.CorrectResult;
 import j2ee.demo.utils.ErrorResult;
 import j2ee.demo.utils.GetJsonContentUtils;
@@ -40,6 +42,9 @@ public class ArticlesController {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private WebSocketService webSocketService;
 
     @ApiOperation(value = "删除分享", nickname = "articlesArticleIdDelete", notes = "", tags = {"article",})
     @ApiResponses(value = {
@@ -99,6 +104,8 @@ public class ArticlesController {
         }
         articleService.addArticleLikes(articleId, userId);
 //        return new Response(201, "Success");
+        String result = user.getUsername() + "点赞了你的分享！";
+        webSocketService.send2User(article.getCreator(), new WiselyResponse(result));
         return new ResponseEntity<>(new CorrectResult("关注成功"), HttpStatus.OK);
     }
 
