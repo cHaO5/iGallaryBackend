@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -22,7 +23,7 @@ import javax.validation.constraints.*;
 @Entity
 public class Moment   {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("Id")
   private Integer id = null;
 

@@ -9,18 +9,25 @@ import java.util.List;
 //@Mapper
 @Repository
 public interface MomentMapper {
+    @Results(id = "momentMap", value = {
+            @Result(property = "likeNum", column = "like_num"),
+            @Result(property = "forwardNum", column = "forward_num"),
+            @Result(property = "favouriteNum", column = "favourite_num"),
+            @Result(property = "commentNum", column = "comment_num") })
     @Select("SELECT * FROM moment")
     List<Moment> getALL();
 
+    @ResultMap("momentMap")
     @Select("SELECT * FROM moment WHERE id = #{id}")
     Moment getOne(int id);
 
-    @Insert("INSERT INTO moment(creator, content, likeNum, forwardNum, favouriteNum, commentNum, tags)" +
-            " VALUES(#{creator}, #{content}, #{likeNum}, #{forwardNum}, #{favouriteNum}, #{commentNum}, #{tags})")
+    @Insert("INSERT INTO moment(creator, content, like_num, forward_num, favourite_num, comment_num, tags, time)" +
+            " VALUES(#{creator}, #{content}, #{likeNum}, #{forwardNum}, #{favouriteNum}, #{commentNum}, #{tags}, #{time})")
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Moment moment);
 
-    @Update("UPDATE moment SET creator=#{creator}, content=#{content}, likeNum=#{likeNum}, " +
-            "forwardNum=#{forwardNum}, favouriteNum=#{favouriteNum}, commentNum=#{commentNum} , tags=#{tags} WHERE id =#{id}")
+    @Update("UPDATE moment SET creator=#{creator}, content=#{content}, like_num=#{likeNum}, " +
+            "forward_num=#{forwardNum}, favourite_num=#{favouriteNum}, comment_num=#{commentNum}, tags=#{tags},  time=#{time} WHERE id =#{id}")
     int update(Moment moment);
 
     @Delete("DELETE FROM moment WHERE id =#{id}")

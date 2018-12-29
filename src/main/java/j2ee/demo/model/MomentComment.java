@@ -10,6 +10,8 @@ import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -23,6 +25,7 @@ import javax.validation.constraints.*;
 @Entity
 public class MomentComment   {
   @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @JsonProperty("Id")
   private Integer id = null;
 

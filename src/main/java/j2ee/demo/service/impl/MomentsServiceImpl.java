@@ -5,6 +5,7 @@ import j2ee.demo.mapper.MomentMapper;
 import j2ee.demo.mapper.UserLikesMapper;
 import j2ee.demo.model.Forward;
 import j2ee.demo.model.Moment;
+import j2ee.demo.model.UserLikes;
 import j2ee.demo.service.MomentsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ public class MomentsServiceImpl implements MomentsService {
         Forward forward = new Forward();
         forward.setCreator(userId);
         forward.setMomentId(momentId);
+        Moment moment = momentMapper.getOne(momentId);
+        moment.setForwardNum(moment.getForwardNum() + 1);
         return forwardMapper.insert(forward);
     }
 
@@ -64,5 +67,15 @@ public class MomentsServiceImpl implements MomentsService {
     @Override
     public List<Moment> getMoment(Integer userId) {
         return momentMapper.getALL();
+    }
+
+    @Override
+    public Moment findByMomentId(Integer momentId) {
+        return momentMapper.getOne(momentId);
+    }
+
+    @Override
+    public UserLikes findLikesByMomentIdAndUserId(Integer momentId, Integer userId) {
+        return userLikesMapper.findByMomentIdAndUserId(momentId, userId);
     }
 }
