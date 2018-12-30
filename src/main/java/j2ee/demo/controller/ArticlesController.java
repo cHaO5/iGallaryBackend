@@ -49,14 +49,14 @@ public class ArticlesController {
     @ApiOperation(value = "删除分享", nickname = "articlesArticleIdDelete", notes = "", tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "动态删除成功"),
-            @ApiResponse(code = 404, message = "某个分享不存在")})
+            @ApiResponse(code = 404, message = "分享不存在")})
 ////    @Authorization
     @RequestMapping(value = "/articles/{ArticleId}",
             method = RequestMethod.DELETE)
     public ResponseEntity<Object>  articlesArticleIdDelete(@ApiParam(value = "", required = true) @PathVariable("ArticleId") Integer articleId) {
         Article article = articleService.findByArticleId(articleId);
         if (article == null) {
-            return new ResponseEntity<>(new ErrorResult("某个分享不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("分享不存在"), HttpStatus.NOT_FOUND);
         }
         articleService.deleteArticleById(articleId);
 //        return new Response(200, "Success");
@@ -68,7 +68,7 @@ public class ArticlesController {
     @ApiOperation(value = "取消点赞", nickname = "articlesArticleIdLikesUserIdDelete", notes = "", tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "点赞取消成功"),
-            @ApiResponse(code = 404, message = "某个用户或分享不存在")})
+            @ApiResponse(code = 404, message = "用户或分享不存在")})
 //    @Authorization
     @RequestMapping(value = "/articles/{ArticleId}/likes/{UserId}",
             method = RequestMethod.DELETE)
@@ -76,7 +76,7 @@ public class ArticlesController {
         Article article = articleService.findByArticleId(articleId);
         User user = usersService.getUser(userId);
         if (article == null || user == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户或分享不存在"), HttpStatus.NOT_FOUND);
         }
         articleService.deleteArticleLikes(articleId, userId);
 //        return new Response(201, "Success");
@@ -87,7 +87,7 @@ public class ArticlesController {
     @ApiOperation(value = "点赞", nickname = "articlesArticleIdLikesUserIdPost", notes = "", tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "关注成功"),
-            @ApiResponse(code = 404, message = "某个用户或分享不存在"),
+            @ApiResponse(code = 404, message = "用户或分享不存在"),
             @ApiResponse(code = 409, message = "你已经关注了这篇分享...")})
 //    @Authorization
     @RequestMapping(value = "/articles/{ArticleId}/likes/{UserId}",
@@ -100,7 +100,7 @@ public class ArticlesController {
         Article article = articleService.findByArticleId(articleId);
         User user = usersService.getUser(userId);
         if (article == null || user == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户或分享不存在"), HttpStatus.NOT_FOUND);
         }
         articleService.addArticleLikes(articleId, userId);
 //        return new Response(201, "Success");
@@ -112,7 +112,7 @@ public class ArticlesController {
 
     @ApiOperation(value = "用户发表分享", nickname = "articlesPost", notes = "", response = Article.class, tags = {"article",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Post article successfully.", response = Article.class)})
+            @ApiResponse(code = 201, message = "分享发布成功", response = Article.class)})
 //    @Authorization
     @RequestMapping(value = "/articles",
             produces = {"application/json"},
@@ -137,7 +137,7 @@ public class ArticlesController {
     }
 
 
-    @ApiOperation(value = "修改用户信息", nickname = "articlesPut", notes = "", response = Article.class, tags = {"article",})
+    @ApiOperation(value = "修改分享", nickname = "articlesPut", notes = "", response = Article.class, tags = {"article",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功修改分享", response = Article.class)})
 //    @Authorization

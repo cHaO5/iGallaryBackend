@@ -46,7 +46,7 @@ public class TokenController {
     private TokenManager tokenManager;
 
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value = "登录")
+//    @ApiOperation(value = "登录")
     public ResponseEntity<Object> login(@RequestParam String username, @RequestParam String password) {
         Assert.notNull(username, "username can not be empty");
         Assert.notNull(password, "password can not be empty");
@@ -79,10 +79,10 @@ public class TokenController {
 
     @RequestMapping(method = RequestMethod.DELETE)
 //    @Authorization
-    @ApiOperation(value = "退出登录")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
-    })
+//    @ApiOperation(value = "退出登录")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+//    })
     public ResponseEntity<Object> logout(@CurrentUser User user) {
         tokenManager.deleteToken(user.getId());
 //        return new Response(200, "Success");

@@ -5,13 +5,10 @@
  */
 package j2ee.demo.controller;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.sun.nio.sctp.Notification;
-import j2ee.demo.authorization.annotation.Authorization;
-import j2ee.demo.elasticsearch.MomentDocument;
-import j2ee.demo.elasticsearch.MomentDocumentService;
+//import j2ee.demo.elasticsearch.MomentES;
+//import j2ee.demo.elasticsearch.MomentESRepository;
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
 import j2ee.demo.model.User;
@@ -23,22 +20,14 @@ import j2ee.demo.service.UsersService;
 import j2ee.demo.service.WebSocketService;
 import j2ee.demo.utils.CorrectResult;
 import j2ee.demo.utils.ErrorResult;
-import j2ee.demo.utils.GetJsonContentUtils;
-import j2ee.demo.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
 @CrossOrigin("*")
@@ -54,8 +43,8 @@ public class MomentsController {
     @Autowired
     private FavouritesService favouritesService;
 
-    @Autowired
-    private MomentDocumentService momentDocumentService;
+//    @Autowired
+//    private MomentESRepository momentESRepository;
 
 //    @Autowired
 //    private SimpMessageSendingOperations simpMessageSendingOperations;
@@ -65,7 +54,7 @@ public class MomentsController {
     @ApiOperation(value = "删除动态", nickname = "momentsMomentIdDelete", notes = "", tags = {"moment",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "动态删除成功"),
-            @ApiResponse(code = 404, message = "某个动态不存在")})
+            @ApiResponse(code = 404, message = "动态不存在")})
 //    @Authorization
     @RequestMapping(value = "/moments/{MomentId}",
             method = RequestMethod.DELETE)
@@ -91,7 +80,7 @@ public class MomentsController {
         Moment moment = momentsService.findByMomentId(momentId);
         User user = usersService.getUser(userId);
         if (moment == null || user == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户或分享不存在"), HttpStatus.NOT_FOUND);
         }
         momentsService.forward(momentId, userId);
 //        return new Response(201, "Success");
@@ -105,7 +94,7 @@ public class MomentsController {
     @ApiOperation(value = "取消点赞", nickname = "momentsMomentIdLikesUserIdDelete", notes = "", tags = {"moment",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "点赞取消成功"),
-            @ApiResponse(code = 404, message = "某个用户或动态不存在")})
+            @ApiResponse(code = 404, message = "用户或动态不存在")})
 //    @Authorization
     @RequestMapping(value = "/moments/{MomentId}/likes/{UserId}",
             method = RequestMethod.DELETE)
@@ -113,7 +102,7 @@ public class MomentsController {
         Moment moment = momentsService.findByMomentId(momentId);
         User user = usersService.getUser(userId);
         if (moment == null || user == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户或分享不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户或分享不存在"), HttpStatus.NOT_FOUND);
         }
         momentsService.deleteMomentLikes(momentId, userId);
 //        return new Response(200, "Success");
@@ -123,8 +112,8 @@ public class MomentsController {
 
     @ApiOperation(value = "点赞", nickname = "momentsMomentIdLikesUserIdPost", notes = "", tags = {"moment",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "关注成功"),
-            @ApiResponse(code = 404, message = "某个用户不存在"),
+            @ApiResponse(code = 201, message = "点赞成功"),
+            @ApiResponse(code = 404, message = "用户不存在"),
             @ApiResponse(code = 409, message = "你已经关注了他...")})
 //    @Authorization
     @RequestMapping(value = "/moments/{MomentId}/likes/{UserId}",
@@ -132,7 +121,7 @@ public class MomentsController {
     public ResponseEntity<Object>  momentsMomentIdLikesUserIdPost(@ApiParam(value = "", required = true) @PathVariable("MomentId") Integer momentId, @ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
         User user = usersService.getUser(userId);
         if (user == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
         }
         UserLikes userLikes = momentsService.findLikesByMomentIdAndUserId(momentId, userId);
         if (userLikes != null) {
@@ -150,7 +139,7 @@ public class MomentsController {
 
     @ApiOperation(value = "用户发表动态", nickname = "momentsPost", notes = "", response = Moment.class, tags = {"moment",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Post moment successfully.", response = Moment.class)})
+            @ApiResponse(code = 201, message = "动态发布成功", response = Moment.class)})
 //    @Authorization
     @RequestMapping(value = "/moments",
             produces = {"application/json"},
@@ -160,7 +149,8 @@ public class MomentsController {
         momentsService.addMoment(body);
         // Save to elasticsearch
 
-        momentDocumentService.save(body);
+//        MomentES momentES = new MomentES(body.getId(), body.getCreator(), body.getContent(), body.getLikeNum(), body.getForwardNum(), body.getFavouriteNum(), body.getCommentNum(), body.getTime(), body.getTags(), body.getImage());
+//        momentESRepository.save(momentES);
 
 //        return new Response(201, "Success");
         JsonObject momentDto = new JsonObject();
@@ -218,7 +208,7 @@ public class MomentsController {
     public ResponseEntity<Object>  momentsUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
         User user = usersService.getUser(userId);
         if (user == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
         }
         List<Moment> data = momentsService.getMoment(userId);
         JsonArray jsonArray = new JsonArray();

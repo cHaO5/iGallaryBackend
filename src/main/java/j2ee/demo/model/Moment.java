@@ -21,7 +21,6 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
-@Document(indexName="elasticsearch", type="moment")
 @Entity
 public class Moment   {
   @Id
@@ -59,6 +58,18 @@ public class Moment   {
   public Moment id(Integer id) {
     this.id = id;
     return this;
+  }
+
+  public Moment(Integer creator, String content, Integer likeNum, Integer forwardNum, Integer favouriteNum, Integer commentNum, String time, String tags, String image) {
+    this.creator = creator;
+    this.content = content;
+    this.likeNum = likeNum;
+    this.forwardNum = forwardNum;
+    this.favouriteNum = favouriteNum;
+    this.commentNum = commentNum;
+    this.time = time;
+    this.tags = tags;
+    this.image = image;
   }
 
   /**

@@ -19,10 +19,10 @@ mybatis:
   typeAliasesPackage: j2ee.demo.model
   mapperLocations: classpath:mapper/*.xml
 
-elasticsearch:
-  ip: 127.0.0.1
-  port: 9300
-  pool: 5
-  cluster:
-    name: elasticsearch
+#elasticsearch:
+#  ip: 127.0.0.1
+#  port: 9300
+#  pool: 5
+#  cluster:
+#    name: elasticsearch
 

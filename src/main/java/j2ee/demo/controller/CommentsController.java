@@ -54,14 +54,14 @@ public class CommentsController {
 
     @ApiOperation(value = "删除评论", nickname = "commentsCommentIdDelete", notes = "", tags = {"comment",})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "取消关注成功")})
+            @ApiResponse(code = 200, message = "评论删除成功")})
 //    @Authorization
     @RequestMapping(value = "/comments/{CommentId}",
             method = RequestMethod.DELETE)
     public ResponseEntity<Object>  commentsCommentIdDelete(@ApiParam(value = "", required = true) @PathVariable("CommentId") Integer commentId) {
         commentService.deleteComment(commentId);
 //        return new Response(200, "Success");
-        return new ResponseEntity<>(new CorrectResult("取消关注成功"), HttpStatus.OK);
+        return new ResponseEntity<>(new CorrectResult("评论删除成功"), HttpStatus.OK);
     }
 
 
@@ -87,10 +87,9 @@ public class CommentsController {
     }
 
 
-    @ApiOperation(value = "修改评论", nickname = "commentsCommentIdPut", notes = "修改评论", response = MomentComment.class, tags = {"comment",})
+    @ApiOperation(value = "修改评论", nickname = "commentsCommentIdPut", notes = "", response = MomentComment.class, tags = {"comment",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Post comment successfully.", response = MomentComment.class),
-            @ApiResponse(code = 409, message = "收藏夹名字冲突")})
+            @ApiResponse(code = 201, message = "评论修改成功", response = MomentComment.class)})
 //    @Authorization
     @RequestMapping(value = "/comments/{CommentId}",
 
@@ -116,7 +115,7 @@ public class CommentsController {
 
     @ApiOperation(value = "用户发表评论", nickname = "commentsPost", notes = "", response = MomentComment.class, tags = {"comment",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Post comment successfully.", response = MomentComment.class)})
+            @ApiResponse(code = 201, message = "评论发表成功", response = MomentComment.class)})
 //    @Authorization
     @RequestMapping(value = "/comments",
             produces = {"application/json"},

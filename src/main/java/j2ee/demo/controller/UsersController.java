@@ -42,7 +42,7 @@ public class UsersController {
 
     @ApiOperation(value = "注册用户", nickname = "usersPost", notes = "", response = User.class, tags = {"user",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Already created the user.", response = User.class),
+            @ApiResponse(code = 201, message = "成功注册", response = User.class),
             @ApiResponse(code = 409, message = "拥有这个邮箱的用户已经被注册了")})
     @RequestMapping(value = "/users",
             produces = {"application/json"},
@@ -73,7 +73,7 @@ public class UsersController {
     }
 
 
-    @ApiOperation(value = "", nickname = "usersUserIdFavouritesFavIdGet", notes = "查看一个收藏夹", response = Favourites.class, tags = {"user",})
+    @ApiOperation(value = "查看一个收藏夹", nickname = "usersUserIdFavouritesFavIdGet", notes = "", response = Favourites.class, tags = {"user",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功获取信息", response = Favourites.class),
             @ApiResponse(code = 403, message = "Fav 不是这个人的 ／ 访问权限不够"),
@@ -100,17 +100,17 @@ public class UsersController {
     }
 
 
-    @ApiOperation(value = "让用户 UserId 取消关注用户 FollowedUserId", nickname = "usersUserIdFollowsFollowedUserIdDelete", notes = "", tags = {"user",})
+    @ApiOperation(value = "取消关注用户", nickname = "usersUserIdFollowsFollowedUserIdDelete", notes = "", tags = {"user",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "取消关注成功"),
-            @ApiResponse(code = 404, message = "某个用户不存在")})
+            @ApiResponse(code = 404, message = "用户不存在")})
 //    @Authorization
     @RequestMapping(value = "/users/{UserId}/follows/{FollowedUserId}",
             method = RequestMethod.DELETE)
     public ResponseEntity<Object>  usersUserIdFollowsFollowedUserIdDelete(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @ApiParam(value = "", required = true) @PathVariable("FollowedUserId") Integer followedUserId) {
         User followTo = usersService.getUser(followedUserId);
         if (followTo == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
         }
         usersService.unfollow(userId, followedUserId);
 //        return new Response(200, "Success");
@@ -118,10 +118,10 @@ public class UsersController {
     }
 
 
-    @ApiOperation(value = "让用户 UserId 关注用户 FollowedUserId", nickname = "usersUserIdFollowsFollowedUserIdPost", notes = "", tags = {"user",})
+    @ApiOperation(value = "关注用户", nickname = "usersUserIdFollowsFollowedUserIdPost", notes = "", tags = {"user",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "关注成功"),
-            @ApiResponse(code = 404, message = "某个用户不存在"),
+            @ApiResponse(code = 404, message = "用户不存在"),
             @ApiResponse(code = 409, message = "你已经关注了他...")})
 //    @Authorization
     @RequestMapping(value = "/users/{UserId}/follows/{FollowedUserId}",
@@ -129,7 +129,7 @@ public class UsersController {
     public ResponseEntity<Object>  usersUserIdFollowsFollowedUserIdPost(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId, @ApiParam(value = "", required = true) @PathVariable("FollowedUserId") Integer followedUserId) {
         User followTo = usersService.getUser(followedUserId);
         if (followTo == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
         }
         UserFollow userFollow = usersService.findByUserIdAndFollowTo(userId, followedUserId);
         if (userFollow != null) {
@@ -141,9 +141,9 @@ public class UsersController {
     }
 
 
-    @ApiOperation(value = "获得用户 follow 的对象", nickname = "usersUserIdFollowsGet", notes = "", response = User.class, responseContainer = "List", tags = {"user",})
+    @ApiOperation(value = "获得用户关注的对象", nickname = "usersUserIdFollowsGet", notes = "", response = User.class, responseContainer = "List", tags = {"user",})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "成功找到 follow 的对象", response = User.class, responseContainer = "List"),
+            @ApiResponse(code = 200, message = "成功找到关注的对象", response = User.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "用户不存在")})
 //    @Authorization
     @RequestMapping(value = "/users/{UserId}/follows",
@@ -152,7 +152,7 @@ public class UsersController {
     public ResponseEntity<Object>  usersUserIdFollowsGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
         User followTo = usersService.getUser(userId);
         if (followTo == null) {
-            return new ResponseEntity<>(new ErrorResult("某个用户不存在"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
         }
         List<Integer> users = usersService.getFollow(userId);
 //        return new Response(200, "Success", users);

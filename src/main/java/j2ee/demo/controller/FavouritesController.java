@@ -45,7 +45,7 @@ public class FavouritesController {
     @Autowired
     private WebSocketService webSocketService;
 
-    @ApiOperation(value = "", nickname = "favouritesUserIdDelete", notes = "删除一个收藏夹", response = Favourites.class, tags = {"favourite",})
+    @ApiOperation(value = "删除收藏夹", nickname = "favouritesUserIdDelete", notes = "", response = Favourites.class, tags = {"favourite",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "成功删除收藏夹", response = Favourites.class),
             @ApiResponse(code = 409, message = "收藏夹名字冲突")})
@@ -60,7 +60,7 @@ public class FavouritesController {
     }
 
 
-    @ApiOperation(value = "", nickname = "favouritesUserIdPost", notes = "创建一个收藏夹", response = Favourites.class, tags = {"favourite",})
+    @ApiOperation(value = "创建收藏夹", nickname = "favouritesUserIdPost", notes = "", response = Favourites.class, tags = {"favourite",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "成功创建收藏夹", response = Favourites.class),
             @ApiResponse(code = 409, message = "收藏夹名字冲突")})
