@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
 
+@Document(indexName="elasticsearch", type="moment")
 @Entity
 public class Moment   {
   @Id
@@ -50,6 +52,9 @@ public class Moment   {
 
   @JsonProperty("Tags")
   private String tags = null;
+
+  @JsonProperty("Image")
+  private String image = null;
 
   public Moment id(Integer id) {
     this.id = id;
@@ -219,6 +224,14 @@ public class Moment   {
 
   public void setTags(String tags) {
     this.tags = tags;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
   }
 
   @Override

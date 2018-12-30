@@ -5,8 +5,17 @@
  */
 package j2ee.demo.controller;
 
+import com.google.gson.JsonObject;
 import io.swagger.annotations.*;
+import j2ee.demo.elasticsearch.MomentDocumentService;
+import j2ee.demo.model.Moment;
+import j2ee.demo.utils.ErrorResult;
+import j2ee.demo.utils.GetJsonContentUtils;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +32,25 @@ import java.util.Map;
 @RestController
 public class SearchController {
 
+    @Autowired
+    private MomentDocumentService momentDocumentService;
+
     @ApiOperation(value = "搜索内容", nickname = "searchGet", notes = "", tags = {"search",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功找到发现页"),
             @ApiResponse(code = 404, message = "未找到相关结果")})
-    @RequestMapping(value = "/_search",
+    @RequestMapping(value = "/search/{keyword}",
             method = RequestMethod.GET)
-    public ResponseEntity<Object>  searchGet() {
-        // TODO search page
-        return null;
+    public ResponseEntity<Object>  searchGet(@ApiParam(value = "", required = true) @PathVariable("keyword") String keyword) {
+        List<Moment> findInContent = momentDocumentService.findByContent(keyword);
+        List<Moment> findInTag = momentDocumentService.findByTags(keyword);
+        if (findInContent == null && findInTag == null) {
+            return new ResponseEntity<>(new ErrorResult("未找到相关结果"), HttpStatus.NOT_FOUND);
+        } else {
+            JsonObject receive = new JsonObject();
+            receive.add("contnet", GetJsonContentUtils.transListToJsonArray(findInContent));
+            receive.add("tag", GetJsonContentUtils.transListToJsonArray(findInTag));
+            return new ResponseEntity<>(receive.toString(), HttpStatus.OK);
+        }
     }
-
 }

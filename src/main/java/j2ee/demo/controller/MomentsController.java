@@ -10,6 +10,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.sun.nio.sctp.Notification;
 import j2ee.demo.authorization.annotation.Authorization;
+import j2ee.demo.elasticsearch.MomentDocument;
+import j2ee.demo.elasticsearch.MomentDocumentService;
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
 import j2ee.demo.model.User;
@@ -51,6 +53,9 @@ public class MomentsController {
 
     @Autowired
     private FavouritesService favouritesService;
+
+    @Autowired
+    private MomentDocumentService momentDocumentService;
 
 //    @Autowired
 //    private SimpMessageSendingOperations simpMessageSendingOperations;
@@ -153,6 +158,10 @@ public class MomentsController {
             method = RequestMethod.POST)
     public ResponseEntity<Object>  momentsPost(@ApiParam(value = "", required = true) @Valid @RequestBody Moment body) {
         momentsService.addMoment(body);
+        // Save to elasticsearch
+
+        momentDocumentService.save(body);
+
 //        return new Response(201, "Success");
         JsonObject momentDto = new JsonObject();
         momentDto.addProperty("Id", body.getId());
@@ -164,6 +173,7 @@ public class MomentsController {
         momentDto.addProperty("CommentNum", body.getCommentNum());
         momentDto.addProperty("Time", body.getTime());
         momentDto.addProperty("Tags", body.getTags());
+        momentDto.addProperty("Image", body.getImage());
         JsonObject receive = new JsonObject();
         receive.addProperty("msg", "Post moment successfully.");
         receive.add("data", momentDto);
@@ -191,6 +201,7 @@ public class MomentsController {
         momentDto.addProperty("CommentNum", body.getCommentNum());
         momentDto.addProperty("Time", body.getTime());
         momentDto.addProperty("Tags", body.getTags());
+        momentDto.addProperty("Image", body.getImage());
 //        return new Response(201, "Success");
         return new ResponseEntity<>(momentDto.toString(), HttpStatus.OK);
     }
@@ -222,6 +233,7 @@ public class MomentsController {
             jsonObject.addProperty("CommentNum", moment.getCommentNum());
             jsonObject.addProperty("Time", moment.getTime());
             jsonObject.addProperty("Tags", moment.getTags());
+            jsonObject.addProperty("Image", moment.getImage());
             UserLikes userLikes = momentsService.findLikesByMomentIdAndUserId(moment.getId(), userId);
             if (userLikes == null) {
                 jsonObject.addProperty("LikesStatus", 0);

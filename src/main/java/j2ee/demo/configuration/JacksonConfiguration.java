@@ -1,6 +1,7 @@
 package j2ee.demo.configuration;
 
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
+import j2ee.demo.configuration.CustomInstantDeserializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

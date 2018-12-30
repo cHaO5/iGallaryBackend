@@ -21,13 +21,13 @@ public interface MomentMapper {
     @Select("SELECT * FROM moment WHERE id = #{id}")
     Moment getOne(int id);
 
-    @Insert("INSERT INTO moment(creator, content, like_num, forward_num, favourite_num, comment_num, tags, time)" +
-            " VALUES(#{creator}, #{content}, #{likeNum}, #{forwardNum}, #{favouriteNum}, #{commentNum}, #{tags}, #{time})")
+    @Insert("INSERT INTO moment(creator, content, like_num, forward_num, favourite_num, comment_num, tags, time, image)" +
+            " VALUES(#{creator}, #{content}, #{likeNum}, #{forwardNum}, #{favouriteNum}, #{commentNum}, #{tags}, #{time}, #{image})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     int insert(Moment moment);
 
     @Update("UPDATE moment SET creator=#{creator}, content=#{content}, like_num=#{likeNum}, " +
-            "forward_num=#{forwardNum}, favourite_num=#{favouriteNum}, comment_num=#{commentNum}, tags=#{tags},  time=#{time} WHERE id =#{id}")
+            "forward_num=#{forwardNum}, favourite_num=#{favouriteNum}, comment_num=#{commentNum}, tags=#{tags},  time=#{time}, image=#{image} WHERE id =#{id}")
     int update(Moment moment);
 
     @Delete("DELETE FROM moment WHERE id =#{id}")
