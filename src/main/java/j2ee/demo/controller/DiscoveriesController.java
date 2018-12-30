@@ -5,17 +5,29 @@
  */
 package j2ee.demo.controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import j2ee.demo.authorization.annotation.Authorization;
 import j2ee.demo.model.Moment;
 import io.swagger.annotations.*;
+import j2ee.demo.model.User;
+import j2ee.demo.model.UserLikes;
+import j2ee.demo.service.FavouritesService;
+import j2ee.demo.service.MomentsService;
+import j2ee.demo.service.UsersService;
+import j2ee.demo.utils.ErrorResult;
 import j2ee.demo.utils.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-12-10T17:01:42.314Z[GMT]")
@@ -24,6 +36,15 @@ import java.util.Map;
 @Api(value = "discoveries", description = "the discoveries API")
 @RestController
 public class DiscoveriesController {
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
+    private MomentsService momentsService;
+
+    @Autowired
+    private FavouritesService favouritesService;
 
     @ApiOperation(value = "获得用户发现页", nickname = "discoveriesUserIdGet", notes = "", response = Moment.class, responseContainer = "List", tags = {"discovery",})
     @ApiResponses(value = {
@@ -34,8 +55,43 @@ public class DiscoveriesController {
             produces = {"application/json"},
             method = RequestMethod.GET)
     public ResponseEntity<Object>  discoveriesUserIdGet(@ApiParam(value = "", required = true) @PathVariable("UserId") Integer userId) {
-        // TODO discovery page
-        return null;
+        User user = usersService.getUser(userId);
+        if (user == null) {
+            return new ResponseEntity<>(new ErrorResult("用户不存在"), HttpStatus.NOT_FOUND);
+        }
+        RestTemplate template = new RestTemplate();
+        String url = "http://10.60.17.56:7777/discovery/" + userId;
+        List<String> moments = template.getForObject(url, ArrayList.class);
+        JsonArray jsonArray = new JsonArray();
+        moments.forEach(momentId ->{
+            Moment moment = momentsService.findByMomentId(Integer.valueOf(momentId));
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("Id", moment.getId());
+            jsonObject.addProperty("Content", moment.getContent());
+            jsonObject.addProperty("Creator", moment.getCreator());
+            jsonObject.addProperty("LikeNum", moment.getLikeNum());
+            jsonObject.addProperty("ForwardNum", moment.getForwardNum());
+            jsonObject.addProperty("FavouriteNum", moment.getFavouriteNum());
+            jsonObject.addProperty("CommentNum", moment.getCommentNum());
+            jsonObject.addProperty("Time", moment.getTime());
+            jsonObject.addProperty("Tags", moment.getTags());
+            UserLikes userLikes = momentsService.findLikesByMomentIdAndUserId(moment.getId(), userId);
+            if (userLikes == null) {
+                jsonObject.addProperty("LikesStatus", 0);
+            } else {
+                jsonObject.addProperty("LikesStatus", 1);
+            }
+            Integer checkId = favouritesService.findMomentFavouriteByUserIdAndMomentId(userId, moment.getId());
+            if (checkId == null) {
+                jsonObject.addProperty("FavouriteStatus", 0);
+            } else {
+                jsonObject.addProperty("FavouriteStatus", 1);
+            }
+            jsonArray.add(jsonObject);
+        });
+        JsonObject receive = new JsonObject();
+        receive.add("data", jsonArray);
+        return new ResponseEntity<>(receive.toString(), HttpStatus.OK);
     }
 
 }
